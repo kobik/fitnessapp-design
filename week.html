@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Today · Part 3 · Week</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="og/app.css" />
+  <link rel="stylesheet" href="og/v2.css" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(3, 318px); justify-content: center; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    .scroll-note { font-size: 13px; color: var(--ink-2); margin: 0; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy .hl { display: block; font: 800 20px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--ink); }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Today · Part 3 · iPhone</div>
+      <h1>The week: streak options</h1>
+      <p class="lede">The week is the marked Mon–Sun strip. On top sits the <b>streak</b>, three ways, each with its own voice. The streak follows openGym's real rule: <b>weeks in a row with at least one workout</b>. Switch the streak situation to read every line of copy in place; the full set is in the table below.</p>
+    </header>
+    <div class="controls">
+      <h3 id="sk-l">Streak</h3>
+      <div class="seg" role="group" aria-labelledby="sk-l" id="cases"></div>
+      <h3 id="st-l">Week</h3>
+      <div class="seg" role="group" aria-labelledby="st-l" id="states">
+        <button type="button" data-s="normal" aria-pressed="true">Workout day</button>
+        <button type="button" data-s="active" aria-pressed="false">In progress</button>
+        <button type="button" data-s="done" aria-pressed="false">Done today</button>
+        <button type="button" data-s="rest" aria-pressed="false">Rest day</button>
+        <button type="button" data-s="first" aria-pressed="false">First run</button>
+        <button type="button" data-s="other" aria-pressed="false">Friday opened</button>
+      </div>
+      <p class="hint">Streak situations change only the streak. <b>Streak kept</b> plays the one-time moment; click it again to replay.</p>
+    </div>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="scard">
+        <div class="dir-head"><span class="n">Streak A</span><h2 id="scard">Flame card</h2></div>
+        <div class="dev"><iframe data-streak="card" title="Today with the flame card streak"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>A card with a white flame, the big number, the last 12 weeks as small bars, and one warm sentence.</li>
+          <li><b>Strength</b>Says the most: the number, the history and a real reason to keep going, in plain words.</li>
+          <li><b>Risk</b>The only card left on the screen; it can feel like a widget.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="sposter">
+        <div class="dir-head"><span class="n">Streak B</span><h2 id="sposter">Poster</h2></div>
+        <div class="dev"><iframe data-streak="poster" title="Today with the poster streak"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>No card. The number at hero size with a flame, and a short caps headline beside it, like the hero title.</li>
+          <li><b>Strength</b>The most energy; it matches the photo hero and reads from arm's length.</li>
+          <li><b>Risk</b>Big type for a small fact; the hype headlines can get old if you see them daily.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="schain">
+        <div class="dir-head"><span class="n">Streak C</span><h2 id="schain">Chain</h2></div>
+        <div class="dev"><iframe data-streak="chain" title="Today with the chain streak"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>One link per week in a row, running toward your best. Your best and the next record are marked on the chain.</li>
+          <li><b>Strength</b>Shows the goal, not just the count: you can see how close the next record is.</li>
+          <li><b>Risk</b>More abstract; the facts-only caption is the least warm of the three.</li>
+        </ul>
+      </section>
+    </div>
+    <section class="copy" aria-labelledby="cp">
+      <h2 id="cp">All the copy</h2>
+      <p class="lede">One row per situation. <b>Coach</b> is warm and full-sentence (card). <b>Hype</b> is a caps headline plus a line (poster). <b>Stats</b> is just the facts (chain). Any voice can go on any look.</p>
+      <div class="tw"><table><thead><tr><th>Situation</th><th>Coach</th><th>Hype</th><th>Stats</th></tr></thead><tbody id="copy"></tbody></table></div>
+    </section>
+    <div class="shared">
+      <div><h3>Same in all three</h3><ul>
+        <li><b>White, not lime.</b> Color still only marks routines.</li>
+        <li><b>Encouraging, never guilt.</b> No "you lost it", no countdown alarms. A missed week just starts week 1 again.</li>
+        <li><b>Streak kept</b> plays once: the first time Today is opened after the week's first workout. The number rolls 6 → 7 and the flame lights. Later workouts that week don't replay it. The bigger celebration belongs on the workout summary screen (a later part).</li>
+        <li><b>Honest numbers.</b> Every line comes from the streak, the best run and the current week.</li>
+      </ul></div>
+      <div><h3>Data in the mock</h3><ul>
+        <li><b>Streak rule</b> is openGym's: this week counts once it has a workout; an empty week so far doesn't break it until it ends.</li>
+        <li><b>Best run</b> 9 weeks (openGym already tracks the longest run).</li>
+        <li><b>Situations</b> are sample numbers, set by the switch.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script src="og/v2.js"></script>
+  <script>
+    const CASES = OGv2.STREAK_CASES, COPY = OGv2.STREAK_COPY;
+    let state = 'normal', streakCase = 'counted';
+    const frames = [...document.querySelectorAll('iframe[data-streak]')];
+    const casesEl = document.getElementById('cases');
+    casesEl.innerHTML = Object.entries(CASES).map(([k, c]) => `<button type="button" data-k="${k}" aria-pressed="${k === streakCase}">${c.label}</button>`).join('');
+    document.getElementById('copy').innerHTML = Object.entries(CASES).map(([k, c]) => `<tr data-k="${k}"><td>${c.label}</td><td>${COPY[k].coach}</td><td><span class="hl">${COPY[k].hype[0]}</span>${COPY[k].hype[1]}</td><td>${COPY[k].stats}</td></tr>`).join('');
+    const mark = () => document.querySelectorAll('#copy tr').forEach((r) => r.classList.toggle('cur', r.dataset.k === streakCase));
+    const post = (f) => {
+      const w = f.contentWindow; if (!w) return;
+      w.postMessage({ ogState: state === 'other' ? 'normal' : state }, '*');
+      w.postMessage({ ogStreak: streakCase }, '*');
+      if (state === 'other') w.postMessage({ ogSel: 4 }, '*');
+    };
+    const toWeek = (f) => { const sc = f.contentDocument?.querySelector('.od-scroll'), wk = f.contentDocument?.querySelector('.wk'); if (sc && wk) sc.scrollTop = Math.max(0, wk.offsetTop - 300); };
+    frames.forEach((f) => {
+      f.addEventListener('load', () => { post(f); setTimeout(() => toWeek(f), 50); });
+      f.src = `today-v2-phone.html?dir=full&day=push&photo=full&tabs=combo&week=score&streak=${f.dataset.streak}`;
+    });
+    const pick = (el, b) => el.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    casesEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-k]'); if (!b) return;
+      streakCase = b.dataset.k; pick(casesEl, b); mark();
+      frames.forEach((f) => f.contentWindow?.postMessage({ ogStreak: streakCase }, '*'));
+    });
+    document.getElementById('states').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-s]'); if (!b) return;
+      state = b.dataset.s; pick(document.getElementById('states'), b); frames.forEach(post);
+    });
+    mark();
+  </script>
+</body>
+</html>

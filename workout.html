@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Live workout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 72ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; flex-basis: 100%; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(3, 318px); justify-content: center; justify-items: stretch; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; max-width: 318px; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .open { font-size: 13px; color: var(--ink-2); }
+    .open a { color: var(--ink); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .new { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #000; background: #fff; border-radius: 999px; padding: 1px 8px; margin-inline-end: 6px; vertical-align: 1px; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Live workout · iPhone</div>
+      <h1>Live workout</h1>
+      <p class="lede">What you see after tapping <b>GO</b> or <b>Start workout</b> on Wed 28 Oct: <b>Push A</b>, 6 exercises, 20 sets. <b>Chosen: C, whole session, with the Small animation thumbnail</b>, reworked to the agreed flow below. A stays for comparison, and B was dropped. The job: <b>log a set with one thumb</b>, rest, move on. A running workout is <b>white</b>. Lime appears once, as the small dot that says which routine this is. Pick a situation to see it on all three phones. Every phone works: log sets, change numbers, open the menus (sliders icon for the workout, ⋯ for the exercise), skip the rest, finish or discard.</p>
+    </header>
+    <div class="controls">
+      <h3 id="st-l">Situation</h3>
+      <div class="seg" role="group" aria-labelledby="st-l" id="states"></div>
+      <h3 id="an-l">Animation</h3>
+      <div class="seg" role="group" aria-labelledby="an-l" id="anims"><button type="button" data-v="full" aria-pressed="false">Full</button><button type="button" data-v="small" aria-pressed="true">Small</button><button type="button" data-v="off" aria-pressed="false">Hidden</button></div>
+      <p class="hint" id="st-hint"></p>
+    </div>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="da">
+        <div class="dir-head"><span class="n">Direction A</span><h2 id="da">One set</h2></div>
+        <div class="dev"><iframe data-dir="A" title="Live workout, direction A: one set"></iframe></div>
+        <span class="open"><a data-open="A" href="workout-phone.html?dir=A" target="_blank" rel="noopener">Open this phone alone</a></span>
+        <ul class="notes">
+          <li><b>What it is</b>One set at a time. The exercise and what to aim for sit at the top. Weight and reps fill the bottom half at full size, each with big − and + buttons, and one white Log button sits under your thumb. During rest, the countdown takes the set-number row's place, so the buttons never move.</li>
+          <li><b>Strength</b>The fastest to log with one hand, and readable from the bench with sweaty eyes. The suggested weight is already in, so most sets are a single tap.</li>
+          <li><b>Animation</b>Full: the exercise loops at the top (176 px), between the exercise arrows. The thumb controls stay where they are. While you rest, it shows what's up next, labelled "Up next · Lateral raise". Small: a 48 px still beside the name. Either one opens a full-screen how-to when tapped.</li>
+          <li><b>Risk</b>You see one set, not the whole exercise or session. Going back to fix an earlier set means tapping its dot. Moving between exercises needs the arrows at the top.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="db">
+        <div class="dir-head"><span class="n">Direction B</span><h2 id="db">Sets table</h2></div>
+        <div class="dev"><iframe data-dir="B" title="Live workout, direction B: sets table"></iframe></div>
+        <span class="open"><a data-open="B" href="workout-phone.html?dir=B" target="_blank" rel="noopener">Open this phone alone</a></span>
+        <ul class="notes">
+          <li><b>What it is</b>The classic gym-log table for one exercise: every set is a row, with last time next to it. A white Log button at the bottom logs the next set. The round ticks down the right log or undo any row. Tapping a number opens a number pad. Exercises are chips along the top, and the rest timer sits above Log.</li>
+          <li><b>Strength</b>All of today's sets and last week's sit side by side, so beating last time is easy to see. Log and the ticks are both where a right thumb lands.</li>
+          <li><b>Risk</b>The targets are smaller, and changing a number takes a pad instead of a tap on +. On a big phone, the chips at the top need a second hand.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="dc">
+        <div class="dir-head"><span class="n" style="color:var(--ink)">Direction C · Chosen</span><h2 id="dc">Whole session</h2></div>
+        <div class="dev"><iframe data-dir="C" title="Live workout, direction C: whole session"></iframe></div>
+        <span class="open"><a data-open="C" href="workout-phone.html?dir=C" target="_blank" rel="noopener">Open this phone alone</a></span>
+        <ul class="notes">
+          <li><b>What it is</b>Two views. The list of all exercises, one line each. And one open exercise that fills everything between the header and the log bar, with no other rows showing. The bar always says what it logs ("Log set 2 · Bench press"), with the weight and reps already filled in.</li>
+          <li><b>Strength</b>Full focus on the exercise you're doing, with big set rows. Moving on takes no trip through the list: ‹ › beside "3 of 6", or a sideways swipe. After an exercise's last set, the next one slides in by itself.</li>
+          <li><b>Animation</b>Small: a still thumbnail on every list row and beside the open exercise's name. Tapping the open one's thumbnail opens the full-screen how-to. Full and Small look the same here.</li>
+          <li><b>Risk</b>Seeing the whole workout takes one tap ("All exercises" or the title). A sideways swipe could move to another exercise by accident, but it's harmless: nothing is lost, and ‹ brings you back.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="copy" aria-labelledby="hc">
+      <h2 id="hc">How C behaves</h2>
+      <div class="shared" style="margin-top:16px;padding-top:0;border-top:0"><div><ul>
+        <li><b>Two views:</b> the list (everything closed) or one open exercise that fills the space between the header and the log bar. The open one is the one the bar logs.</li>
+        <li><b>Entering:</b> the first exercise is already open. There's no Start button. The clock reads "Not started" until the first set is logged.</li>
+        <li><b>Back to the list:</b> "All exercises" at the top, a tap on the title, or Escape. The view shrinks back into its row. In the list, tapping a row grows it into the open view.</li>
+        <li><b>Next and previous:</b> ‹ › beside "3 of 6", or a sideways swipe. The bar follows.</li>
+        <li><b>After an exercise's last set</b>, the next unfinished exercise slides in and "3 of 6" updates. After the very last set, the list shows every result.</li>
+      </ul></div><div><ul>
+        <li><b>The list:</b> rows never move. Each shows ✓ and its result, "2 of 3 sets", or the target ("3 × 5 · 75 kg"). There are no log or tick buttons on rows, and the bar shows the rest timer and "Open an exercise to log".</li>
+        <li><b>Rest belongs to the workout.</b> It starts after each set and keeps running when you switch.</li>
+        <li><b>Inside the open exercise:</b> tap a logged set to fix its numbers in place. Tap its check to un-log it, with Undo in the message. ⋯ has warm-up, remove set, swap, note, history and remove exercise. Swap and remove ask first if sets are logged.</li>
+        <li><b>Workout level:</b> Finish (outlined until every set is logged, then the one solid button in the bar), Workout options (add exercise, reorder, session note, discard), and ⌄ to minimize. Discard always asks.</li>
+        <li><b>Motion</b> is 300 ms or less and eases out. With reduced motion turned on, every change is instant.</li>
+      </ul></div></div>
+    </section>
+
+    <section class="copy" aria-labelledby="sx">
+      <h2 id="sx">The situations</h2>
+      <p class="lede">All numbers come from one story: Push A from the Today screen. Last time was Wed 21 Oct. The weigh-in is 80.9 kg, the same as Today's body weight. "Resting" happens 12:40 in, the same time Today shows while this workout runs.</p>
+      <div class="tw"><table><thead><tr><th>Situation</th><th>What's on screen</th></tr></thead><tbody id="st-table"></tbody></table></div>
+    </section>
+
+    <div class="shared">
+      <div><h3>Same in all three</h3><ul>
+        <li><b>The tab bar hides while you train.</b> The bottom of the screen is the only place a thumb reaches easily, and logging needs all of it. The capsule would sit exactly where Log goes, and a stray tap on Progress mid-set is a real risk. The ⌄ at the top left minimizes the workout. The tab bar comes back with <b>GO as the white live timer</b>, and tapping it brings you back (try "Left the screen").</li>
+        <li><b>White means live.</b> The clock, the progress bar, the Log button, the logged checks and the rest bar are white. Lime appears only as the dot before "Push A". A freestyle workout has no dot.</li>
+        <li><b>One solid button.</b> Log is the only solid button. Finish stays outlined in the header until every set is logged. Then Finish moves down into Log's place, and the header copy goes away so it isn't shown twice.</li>
+        <li><b>The weight is already suggested, with the reason.</b> Each set starts with what progression picked, plus the app's own reason line ("Every rep last time. 2.5 kg more.") and the rule behind it. If you change the weight, it carries to the sets after it that aren't logged yet.</li>
+        <li><b>Rest</b> starts when you log a set and uses that exercise's own time: 2:00 for the barbell presses, 1:30 for the dumbbell press and dips, 1:00 for raises and pushdowns. You can take off or add 15 seconds, or Skip. At zero it says Ready.</li>
+        <li><b>No history yet</b> means no weight is suggested. The weight shows "–", and Log asks for a weight first (a barbell starts on the bar).</li>
+        <li><b>Discard is never one tap.</b> Finish → Discard workout → "Discard workout? The 8 sets you logged in this session will be lost." Removing an exercise and swapping one that has logged sets also ask first.</li>
+        <li><b>Long names</b> drop to a smaller size and stop at two lines. The full name is in the ⋯ sheet title, and messages shorten it.</li>
+        <li><b>Warm-ups are counted apart</b>, as in the app: two warm-ups in front, and the first work set still reads Set 1. Last time is matched to work sets only.</li>
+        <li><b>Messages</b> appear just above the bottom controls, never over the clock, and run to two lines at most.</li>
+        <li><b>Typing a number:</b> tapping any big number opens a pad with ± buttons. Nothing changes until you tap Next or Done, and Cancel leaves it as it was.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>Four layouts already:</b> Cards, List, Compact and Focus. A is close to Focus, B to Cards and C to List, so each direction is a restyle of something people already have, not a new way of working.</li>
+        <li><b>Logging weight × reps</b> with steppers or by typing. A tick logs a set, and ticking it again undoes it. Weight changes carry to later sets.</li>
+        <li><b>Last time or best set</b> (the reference line can switch), plus the progression reason and rule (Linear, Double progression and others), all quoted here word for word.</li>
+        <li><b>Rest timer</b> per exercise, with −15 / +15, pause, skip and a Ready state. <b>Plate loading</b> ("each side"), dumbbells, bodyweight and warm-up sets.</li>
+        <li><b>Add, swap and remove exercises</b> (remove asks first), move up and down, exercise and session notes, and exercise history.</li>
+        <li><b>Finish sheet:</b> Finish and save, or Discard workout, then a confirmation. It's the only way to discard, as here.</li>
+        <li><b>Weigh-in before the workout</b> ("Quick check-in", which can be turned off in Settings). <b>Minimize</b> keeps the workout running, and the centre tab shows the time.</li>
+        <li><b>The exercise animation</b> with the Full / Small / Hidden setting (Settings → During a workout), and how-to steps for every library exercise. The steps here are the app's own, word for word. The figure is a stand-in for the app's real clips.</li>
+        <li><b>Not shown here, but the app has them:</b> supersets, drop sets and bursts, per-side sets, timed holds, cardio, effort (RIR/RPE) and Apple Watch logging. Each needs its own small state later.</li>
+        <li><span class="new">New for the app</span><b>Hiding the tab bar</b> on the live screen. Today the app keeps it, with the centre button reading "Workout".</li>
+        <li><span class="new">New for the app</span><b>White for a running workout.</b> The app uses its accent and orange today.</li>
+        <li><span class="new">New for the app</span><b>C's flow:</b> one exercise open at a time, a fixed log bar that names it, and the next exercise opening by itself. The app's List layout logs inside every exercise's rows and keeps a separate "Current" marker.</li>
+        <li><span class="new">New for the app</span><b>The clock waits for the first set</b> ("Not started"). The app starts it when the workout begins.</li>
+        <li><span class="new">New for the app</span><b>Un-log with Undo</b> in the message (the app un-logs on a second tap of the tick, with no Undo).</li>
+        <li><span class="new">New for the app</span><b>Reordering only in Workout options</b>, with up and down for every exercise. The app drags exercises in the list. In C, order never changes while you're logging.</li>
+        <li><span class="new">New for the app</span><b>"Up next" during rest</b> (A, Full only): the animation switches to the next exercise while the timer runs, then back.</li>
+        <li><span class="new">New for the app</span><b>Asking before a swap</b> that would lose logged sets.</li>
+        <li><b>The number pad</b> stands in for the phone's own number keyboard, which the real app uses. It isn't a new feature.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script>
+    const STATES = [
+      ['entering', 'Entering (not started)', 'C: Bench press is already open, filling the screen (1 of 6). Nothing is logged and the clock reads Not started. The bar says Log set 1 · Bench press, with 75 kg × 5 filled in (last time 72.5 × 5, 5, 4, every rep, so 2.5 kg more: a new best if it goes up).'],
+      ['mid', 'Mid-exercise', 'Bench press set 1 is logged, 3:40 in. The bar logs set 2.'],
+      ['resting', 'Resting', '12:40 in, 8 of 20 sets. Overhead press set 2 is logged and the 2:00 rest is counting down live (1:12 left). The bar logs set 3.'],
+      ['switched', 'Switched exercise', 'C: › was tapped (or a swipe) with Overhead press at 2 of 3, so Lateral raise (4 of 6) has the view and the bar. The rest keeps running (0:58). In the list, Overhead press reads "2 of 3 sets". A opens Lateral raise.'],
+      ['collapsed', 'All closed', 'C: All exercises (or the title) was tapped, so the list of all six shows. The bar shows only the rest and "Open an exercise to log". A has nothing to close and shows Overhead press.'],
+      ['fixing', 'Fixing a logged set', 'C: Overhead press set 1 is open for fixing, with its own − and +, while the bar still logs set 3. A shows set 1 picked, with Logged · undo.'],
+      ['alldone', 'All sets done', '20 of 20. C shows the list with every result. Finish workout takes Log\'s place as the one solid button.'],
+      ['checkin', 'Weigh-in first', 'The quick check-in: 80.9 kg, Save & start workout, or Start without weighing in. The clock still waits for the first set.'],
+      ['nohist', 'No history (swapped in)', 'Overhead press was swapped for Machine shoulder press, which has never been logged. No weight is suggested. Log asks for one first.'],
+      ['long', 'Long exercise name', 'A user-named exercise: "Single-arm cable lateral raise with lean-away, slow negative".'],
+      ['last', 'Last set', 'Dips, set 3 of 3, the very last set at 48:30. Bodyweight, so the weight reads BW. The button reads Log last set.'],
+      ['finish', 'Finish early', 'Finish tapped with 12 sets still not logged: Finish and save, Keep going, or Discard workout.'],
+      ['discard', 'Discard confirm', 'The confirmation after Discard workout. It says how many logged sets would be lost (8).'],
+      ['away', 'Left the screen', 'After ⌄: the tab bar is back and GO is the white live timer. Tap it to return to the workout.'],
+      ['empty', 'Freestyle, empty', 'A freestyle workout with nothing in it yet. Add exercise is the one action.']
+    ];
+
+    let cur = 'resting', anim = 'small';
+    const frames = [...document.querySelectorAll('iframe[data-dir]')];
+    const statesEl = document.getElementById('states'), hint = document.getElementById('st-hint');
+    statesEl.innerHTML = STATES.map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="${k === cur}">${l}</button>`).join('');
+    document.getElementById('st-table').innerHTML = STATES.map(([, l, d]) => `<tr><td>${l}</td><td>${d}</td></tr>`).join('');
+    const setHint = () => { hint.textContent = STATES.find((s) => s[0] === cur)[2]; document.querySelectorAll('[data-open]').forEach((a) => { a.href = `workout-phone.html?dir=${a.dataset.open}&state=${cur}&anim=${anim}`; }); };
+    const post = (f) => f.contentWindow?.postMessage({ ogState: cur }, '*');
+    const load = () => frames.forEach((f) => { f.src = `workout-phone.html?dir=${f.dataset.dir}&state=${cur}&anim=${anim}`; });
+    load();
+    document.getElementById('anims').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-v]'); if (!b) return;
+      anim = b.dataset.v;
+      document.querySelectorAll('#anims button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      setHint(); load();
+    });
+    setHint();
+    statesEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-k]'); if (!b) return;
+      cur = b.dataset.k;
+      statesEl.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      setHint(); frames.forEach(post);
+    });
+  </script>
+</body>
+</html>

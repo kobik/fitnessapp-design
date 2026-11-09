@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "plan.html",
+  "entry": "plan.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:26:23.232Z",
+  "updatedAt": "2026-10-30T12:26:23.232Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

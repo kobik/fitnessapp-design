@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "exercises.html",
+  "entry": "exercises.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:23:07.370Z",
+  "updatedAt": "2026-10-30T12:23:07.370Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

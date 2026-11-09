@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Progress tab · iPhone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1400px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(2, 318px); justify-content: center; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n.on { color: var(--ink); }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1440px) { .dirs { grid-template-columns: repeat(4, 318px); gap: 48px 32px; } }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    .scroll-note { font-size: 13px; color: var(--ink-2); margin: 0; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy .hl { display: block; font: 800 20px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--ink); }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+  <style>
+    .dev { height: 620px; }
+    .states { margin-top: 12px; display: grid; gap: 4px; }
+    .tryit { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 15px; }
+    .tryit li { margin-bottom: 4px; }
+    .tryit b { color: var(--ink); font-weight: 600; }
+    .new { display: inline-block; margin-inline-end: 6px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #000; background: var(--ink); vertical-align: 1px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Progress tab · iPhone</div>
+      <h1>Progress: three ways in, plus a mix</h1>
+      <p class="lede">The fourth tab in the capsule. Today the app calls it <b>Stats</b> ("Progress &amp; history") and stacks a dozen grey cards. Each direction below shows the same history: <b>56 workouts since 6 Jul</b>, a 9-week run, a week off, then the current <b>7-week streak</b>; Bench press at <b>72.5 kg</b> (the same sessions as the Exercises screen); body weight as <b>weekly averages</b> with the <b>78.0 kg goal</b> dashed, exactly as on Today. Switch the situation to see every direction in each case. Every phone is live: tap workouts, records, exercises and the Log button.</p>
+    </header>
+    <div class="controls">
+      <h3 id="sl">Situation</h3>
+      <div class="seg" role="group" aria-labelledby="sl" id="states"></div>
+      <p class="hint" id="shint"></p>
+    </div>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="dd">
+        <div class="dir-head"><span class="n on"><span class="new">Candidate</span>Direction D</span><h2 id="dd">Mix</h2></div>
+        <div class="dev"><iframe data-dir="mix" title="Progress, direction D, Mix"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>A's one scroll on top, so every topic is visible and the Strength chart comes first. Each heading (Strength, Body weight, Muscles, History) opens B's full page for that topic, and B's switch lets you move sideways. History is C's weeks as chapters: the last two weeks on the overview, all of them behind the heading with the routine filter.</li>
+          <li><b>What it fixes</b>Nothing is hidden, unlike B. The chart is on the first screen, unlike C. It's shorter than A because C's week chapters replace A's Records and Recent workouts; each week shows its records count. Under the Strength chart, the lift you picked shows its last 3 workouts (sets and record trophies) and changes with the chips; "Best lift for each exercise" sits below that. Per set, effort and the 30/90-day muscle views have room on the topic pages.</li>
+          <li><b>Risk</b>Two ways into the same topic: the heading or the switch. Back (or Escape) returns to the same spot on the overview. The topic page is a push, not a sheet, so it feels like a different screen.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="da">
+        <div class="dir-head"><span class="n">Direction A</span><h2 id="da">Overview</h2></div>
+        <div class="dev"><iframe data-dir="overview" title="Progress, overview direction"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>One scroll with every topic once, in the order you'll check them: three totals, then Strength, Body weight, Muscles this week, Records and Recent workouts. Each section opens its detail in a sheet.</li>
+          <li><b>Strength</b>Closest to what the app has today, minus the grey cards. Nothing is more than one swipe away, and the big lifts are one tap each.</li>
+          <li><b>Risk</b>It's long. Each section is a short version, so the full lift options (per set, effort) need a home, and some people will never scroll past the first chart.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="db">
+        <div class="dir-head"><span class="n">Direction B</span><h2 id="db">One at a time</h2></div>
+        <div class="dev"><iframe data-dir="focus" title="Progress, one topic at a time direction"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>A switch at the top: Lifts · Weight · Muscles · History. Each topic gets the whole screen: a bigger chart, its own period, the last five workouts, the full week list.</li>
+          <li><b>Strength</b>Calm and deep. Long exercise names get a full-width selector with two lines. Room for every chart the app has without crowding.</li>
+          <li><b>Risk</b>Three of the four topics are hidden at any time, so a new record or a missed muscle can go unseen. It's one more tap to see what changed.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="dc">
+        <div class="dir-head"><span class="n">Direction C</span><h2 id="dc">Logbook</h2></div>
+        <div class="dev"><iframe data-dir="log" title="Progress, logbook direction"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>History first. Each week is a chapter: its workouts, how much you lifted, the records you set and that week's average weight. Weeks off are named kindly. Filter by routine at the top.</li>
+          <li><b>Strength</b>Tells the story of the habit, and puts weight next to the training that caused it. Charts are one tap away: any workout, then any exercise.</li>
+          <li><b>Risk</b>No chart on the first screen, so "am I getting stronger?" takes two taps. Muscles aren't here at all; they'd need to move to Exercises or a workout's sheet.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="copy" aria-labelledby="sts">
+      <h2 id="sts">Situations</h2>
+      <div class="tw"><table><thead><tr><th>Situation</th><th>What you see</th></tr></thead><tbody id="stable"></tbody></table></div>
+    </section>
+
+    <section class="copy" aria-labelledby="try">
+      <h2 id="try">Try on any phone</h2>
+      <ul class="tryit" style="margin-top:12px">
+        <li><b>Tap a workout</b> for its sheet: time, sets, tonnes, records, every exercise with its sets. Tap an exercise for its line. <b>Delete workout</b> asks first, then the totals, charts and lists update.</li>
+        <li><b>Exercise picker</b> (A: "All 17", B: the selector): type to search. Picking one redraws the chart.</li>
+        <li><b>Top set / Est. max</b> and <b>1M · 3M · 1Y · All</b> redraw the chart and the "Up … since" line.</li>
+        <li><b>Log</b> opens the weigh-in sheet. Today is already logged, so it edits today's number; the weekly column and average update.</li>
+        <li><b>Close any sheet</b> with X, Escape or a tap outside. B's topic switch also works with the arrow keys.</li>
+      </ul>
+    </section>
+
+    <div class="shared">
+      <div><h3>Same in all three</h3><ul>
+        <li><b>No grey cards, no lime.</b> Sections sit on black with a hairline, like Today. Charts, records and the "now" column are white.</li>
+        <li><b>Color only marks a routine:</b> the dot on each workout row, the filled days on the calendar, the routine filter. A running workout is a white pulsing ring.</li>
+        <li><b>Body weight matches Today's chosen C:</b> weekly columns, this week white, goal dashed, the same sentences ("Losing about 0.4 kg a week, on track for your goal").</li>
+        <li><b>Records are white trophies</b> and filled white dots on a lift's line. The app already marks a workout's records (PRs).</li>
+        <li><b>Encouragement, never guilt.</b> "A week off. Rest counts too." Untrained muscles are an invitation (tap for exercises), not a warning.</li>
+        <li><b>Long names never break:</b> one line with … in rows and chips, two lines in the selector and sheet titles. Try "Long names".</li>
+        <li><b>The streak stays on Today.</b> Progress doesn't repeat the 7; C shows the best run (9) as part of the story.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>Totals:</b> workouts, this month, lifted in total. <b>Activity</b> for 12 months (B and C show it as a month calendar instead).</li>
+        <li><b>Exercise progress</b> with a searchable picker, Top set, Est. 1RM and 1M/3M/1Y/All. Also Per set, Effort, Max reps and a body-weight view, not drawn here; B has room for them as more switch options.</li>
+        <li><b>Muscle balance</b> by sets for Week (done of planned), 30 and 90 days, plus "Not trained" muscles that open their exercises. Fatigue and Strength maps exist too.</li>
+        <li><b>Body weight</b> goal, Log, weekly rate and "All weigh-ins" grouped by week. <b>History</b> with every workout, PR counts, Log a past workout and Delete with a confirmation.</li>
+        <li><b>Not placed yet:</b> Structural balance, Progress photos, Body measurements, Effort and the Performance report. They need a row on this tab or a move.</li>
+      </ul>
+      <h3 style="margin-top:20px">New for the app</h3><ul>
+        <li><span class="new">New</span><b>Records list:</b> "Records · last 30 days" and "Best lifts" across all exercises. The app knows each workout's records but has no list of them.</li>
+        <li><span class="new">New</span><b>Weeks as chapters</b> (C): each week's tonnes, records and weight average, and the "weeks off" notes.</li>
+        <li><span class="new">New</span><b>Routine filter</b> on history (C).</li>
+        <li><span class="new">New</span><b>Month calendar</b> with routine colors (B, C), replacing the 12-month heat map.</li>
+        <li><span class="new">New</span><b>Featured lifts as chips</b> (A) and the "Up 20 kg since 8 Jul" line next to the best. Both come from data the app already has.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script>
+    const STATES = {
+      plenty: ['Plenty of data', '56 workouts over 16 weeks, 30 weigh-ins, 85 records along the way. The normal case for someone who has trained a few months.'],
+      few: ['Only a few workouts', 'Three workouts in two weeks and two weigh-ins. Lifts done once say "Do it once more and your line starts here." Weight shows one column and asks for a couple more weigh-ins.'],
+      new: ['Brand new', 'Nothing logged. One screen explains how it fills: finish a workout, do an exercise twice, weigh in a few mornings. GO starts training; "Log a past workout" is there for people who trained before.'],
+      long: ['Long names', 'Same data with user-made names like "Paused close-grip bench press with a 2-second stop on the chest" and "Push A · Heavy chest, shoulders and triceps day".'],
+      live: ['Workout running', 'Push A started 12 minutes ago. GO is the white live timer, and the newest history row is a white "In progress" with Resume.'],
+      noweight: ['Never weighs in', 'Trains often, never logged a weight and has no goal. Body weight becomes one invitation to start a trend.']
+    };
+    let state = 'plenty';
+    const frames = [...document.querySelectorAll('iframe[data-dir]')];
+    const el = document.getElementById('states'), hint = document.getElementById('shint');
+    el.innerHTML = Object.entries(STATES).map(([k, v]) => `<button type="button" data-k="${k}" aria-pressed="${k === state}">${v[0]}</button>`).join('');
+    document.getElementById('stable').innerHTML = Object.entries(STATES).map(([k, v]) => `<tr><td>${v[0]}</td><td>${v[1]}</td></tr>`).join('');
+    const post = (f) => f.contentWindow?.postMessage({ ogState: state }, '*');
+    const setHint = () => { hint.textContent = STATES[state][1]; };
+    frames.forEach((f) => { f.addEventListener('load', () => post(f)); f.src = `progress-phone.html?dir=${f.dataset.dir}&state=${state}`; });
+    setHint();
+    el.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-k]'); if (!b) return;
+      state = b.dataset.k;
+      el.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      setHint(); frames.forEach(post);
+    });
+  </script>
+</body>
+</html>

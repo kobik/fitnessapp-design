@@ -1,0 +1,12 @@
+/* Stand-in exercise animation frame (og/anim.js). Size it from outside: width on .oga; it keeps a square ratio. */
+.oga { position: relative; display: block; aspect-ratio: 1 / 1; width: 100%; border-radius: 16px; background: #1c1c1e; overflow: hidden; }
+.oga svg { display: block; width: 100%; height: 100%; }
+.oga .fg { fill: none; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.oga .hd { fill: #fff; }
+.oga .br { fill: none; stroke: rgba(235,235,245,.66); stroke-width: 2.4; }
+.oga .eq { fill: none; stroke: rgba(235,235,245,.45); stroke-width: 2.4; stroke-linecap: round; }
+.oga .gd { stroke: #2c2c2e; stroke-width: 1.5; }
+.oga.is-still { border-radius: 10px; }
+.oga.is-still .fg { stroke-width: 4.5; }
+.oga-tag { position: absolute; left: 8px; top: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0,0,0,.6);
+  font: 600 11px/16px -apple-system, system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: rgba(235,235,245,.66); }

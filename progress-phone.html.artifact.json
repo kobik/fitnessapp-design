@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "progress-phone.html",
+  "entry": "progress-phone.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:14:43.127Z",
+  "updatedAt": "2026-10-30T12:14:43.127Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

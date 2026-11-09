@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "today-v2.html",
+  "entry": "today-v2.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-28T18:25:46.572Z",
+  "updatedAt": "2026-10-28T18:25:46.572Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

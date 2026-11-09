@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "today-v2-phone.html",
+  "entry": "today-v2-phone.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-28T18:25:15.721Z",
+  "updatedAt": "2026-10-28T18:25:15.721Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

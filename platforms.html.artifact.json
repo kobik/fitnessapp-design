@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "platforms.html",
+  "entry": "platforms.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-28T17:52:24.151Z",
+  "updatedAt": "2026-10-28T17:52:24.151Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

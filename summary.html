@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Workout summary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 72ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 760px) { .dirs { grid-template-columns: repeat(2, 318px); justify-content: center; justify-items: stretch; gap: 48px 56px; } }
+    @media (min-width: 1560px) { .wrap { max-width: 1480px; } .dirs { grid-template-columns: repeat(4, 318px); } }
+    .dir.pick .dir-head .n { color: var(--ink); }
+    .dir { display: grid; gap: 20px; align-content: start; max-width: 318px; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .new { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 1px 8px; border-radius: 999px; background: #fff; color: #000; margin-inline-end: 6px; vertical-align: 1px; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Workout summary · iPhone</div>
+      <h1>Workout summary</h1>
+      <p class="lede">What you see right after <b>Finish and save</b>. It replaces today's "Workout complete!" pop-up. This is where the <b>big streak celebration</b> lives (Today only does the small 6 → 7 roll). Everything shown is something openGym already works out, except the items marked <span class="new">New</span> below. Streak and records are <b>white</b>; the routine color is only the small dot next to the routine name. Pick a situation to see it in all three directions. Pick the same one again to replay the celebration. On the phones, try <b>Done</b>, <b>Add a progress photo</b>, and in B tap an exercise.</p>
+    </header>
+    <div class="controls">
+      <h3 id="st-l">Situation</h3>
+      <div class="seg" role="group" aria-labelledby="st-l" id="states"></div>
+    </div>
+    <div class="dirs">
+      <section class="dir pick" aria-labelledby="d-d">
+        <div class="dir-head"><span class="n"><span class="new">Chosen</span>Direction D</span><h2 id="d-d">Mix</h2></div>
+        <div class="dev"><iframe data-dir="mix" title="Workout summary, direction D, Mix"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>A's big moment on top and B's compact exercise list below. On a plain or short day, the moment is a real win: "5 of 6 lifts up on last time".</li>
+          <li><b>What makes it uplifting</b>Volume shows "+260 vs last". The streak shows how close you are to your best ("3 more weeks to beat your best of 9"). Above Done, there's the next step up ("Next time: Bench press 75 kg × 5"). The check pops in, the numbers count up and the up-arrows pop in as you scroll to the list, once per visit.</li>
+          <li><b>Honest by design</b>A win is shown only when the numbers back it up. There's no volume comparison on a short day or when an exercise is new, no "next time" line when nothing steps up, and a down day falls back to a calm "Nice work".</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="d-a">
+        <div class="dir-head"><span class="n">Direction A</span><h2 id="d-a">Moment</h2></div>
+        <div class="dev"><iframe data-dir="moment" title="Workout summary, direction A, Moment"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>One big moment fills the top: the streak with its flame and the number rolling up, or your new records, or a calm "Nice work" on a normal day. The numbers and every exercise scroll underneath.</li>
+          <li><b>Strength</b>It feels like a finish line. The celebration is impossible to miss, and the details are still one scroll away, in the order the app shows them today.</li>
+          <li><b>Risk</b>On a normal day the top half is mostly a pat on the back. People who want their numbers have to scroll past it every time.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="d-b">
+        <div class="dir-head"><span class="n">Direction B</span><h2 id="d-b">Scoreboard</h2></div>
+        <div class="dev"><iframe data-dir="score" title="Workout summary, direction B, Scoreboard"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>The workout first: its name, three big numbers, then a dark card with a white flame and number when the streak moves. Exercises are a compact two-line list (name, then today's sets); tap one to see last time and next time.</li>
+          <li><b>Strength</b>The most information on the first screen, and the quickest to read. A plain day looks plain, so the streak card really stands out when it appears.</li>
+          <li><b>Risk</b>The celebration is a card, not a moment. Records sit lower down, and long exercise names wrap to two lines in the list.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="d-c">
+        <div class="dir-head"><span class="n">Direction C</span><h2 id="d-c">Story</h2></div>
+        <div class="dev"><iframe data-dir="story" title="Workout summary, direction C, Story"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>Full-screen pages you swipe through, one moment per page: the streak, then records, then the numbers, then the exercises. Only the moments that really happened get a page.</li>
+          <li><b>Strength</b>Each win gets the whole screen, at the biggest type in the app. Done works from any page, so nobody is forced through it.</li>
+          <li><b>Risk</b>More taps to reach the details, and swiping sideways is a new gesture for openGym. Pages are easy to miss.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="copy" aria-labelledby="sx">
+      <h2 id="sx">Situations</h2>
+      <p class="lede">Every number comes from the same sample: the week of Mon 26 Oct, Legs done on Monday, Push A today (Wed 28 Oct), a 7-week streak and a best of 9.</p>
+      <div class="tw"><table><thead><tr><th>Situation</th><th>What happened</th><th>What the summary celebrates</th></tr></thead><tbody id="st-rows">
+        <tr data-k="normal"><td>Normal workout</td><td>Push A, 55 min (the length Today shows), all 20 work sets. Monday already counted this week.</td><td>"Nice work". The streak is a quiet line: 7 weeks, this week already counts.</td></tr>
+        <tr data-k="prs"><td>With records</td><td>Bench press 75 kg × 5, 5, 4 (was 72.5, last done 21 Oct at 72.5 × 5, 5, 4) and Lateral raise 12 kg (was 10). Incline press at 30 kg × 10 gives a best estimated 1-rep max of 40 kg.</td><td>The top record is the moment (Bench press 75 kg, was 72.5), with "2 new records" as the small line above it. The rest are listed once, each with its old best. The estimate is shown separately, as the app does, so it can't be mistaken for a heavier lift.</td></tr>
+        <tr data-k="weekfirst"><td>Week's first</td><td>Monday's Legs, the first workout of the week.</td><td>Streak kept: 6 rolls to 7. "3 more weeks and you beat your best of 9."</td></tr>
+        <tr data-k="best"><td>New best streak</td><td>What-if: the same Monday, with 9 weeks going in.</td><td>9 rolls to 10: "Longest run ever. Your old best was 9."</td></tr>
+        <tr data-k="partial"><td>Short workout</td><td>Finished early: 3 of 6 exercises, 9 work sets in 26 min.</td><td>"Short and done". It still counts. The exercises not started are named once, kindly: they stay in the routine.</td></tr>
+        <tr data-k="firstever"><td>First workout ever</td><td>No history yet.</td><td>"1 week streak" with one line: "Your streak starts here." No roll from 0. Every exercise says First time, and there's no "last time".</td></tr>
+        <tr data-k="long"><td>Long names</td><td>A long routine name and two long exercise names.</td><td>The routine name wraps to two lines everywhere. Exercise names wrap to two lines (A, C) in every list, including the compact one in B and D. Nothing overlaps.</td></tr>
+        <tr data-k="added"><td>Added exercise + cardio</td><td>Cable fly added during the workout, a 10-minute treadmill walk at the end, 66 min in total.</td><td>Cardio gets its own short list. Cable fly is offered to the routine ("Not in Push A yet", button "Add to routine"); one tap and it reads "Added to routine".</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <div class="shared">
+      <div><h3>Same in every direction</h3><ul>
+        <li><b>One solid button: Done</b>, in white. Close (X) does the same, as in the app: both go to Home, and the workout is already saved.</li>
+        <li><b>Celebrate what really happened, in order:</b> a streak that moved, then records, then a short day, otherwise a calm "Nice work". There's no streak fanfare on a day that didn't change it.</li>
+        <li><b>White for wins.</b> Flame, records, the "up" arrows and the trained muscles are white. "Down on last time" is a grey arrow, never red or orange (orange is Legs).</li>
+        <li><b>No guilt.</b> A short workout says it counts. Exercises not started are mentioned once, as staying in the routine for next time.</li>
+        <li><b>Stats:</b> duration, volume and work sets, with warm-ups as the small line. The PR count tile from the app is dropped, because the records list already says it.</li>
+        <li><b>The streak strip</b> draws only the current run: one white tick per week, this week's the tall one. No missed weeks are drawn.</li>
+        <li><b>Reduced motion:</b> no roll, glow or slide; the new number simply shows.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>Already on today's summary:</b> duration, volume, "22 sets · 20 work", new PRs (heaviest weight), best estimated 1-rep max, "What you just trained" body map, last time / next time with up, same or down, cardio, "New in this workout: Add it to Push A", adding photos and clips, Close and one button ("Nice!").</li>
+        <li><b>Partial workouts:</b> exercises with no ticked sets are dropped when you finish; the routine keeps them.</li>
+        <li><span class="new">New for the app</span><b>Streak on the summary.</b> The app already works out the week streak (Home, widgets) and the longest run of weeks (the report), but the summary doesn't show either. The "kept", "new best" and "week 1" moments need the summary to compare the streak before and after this workout.</li>
+        <li><span class="new">New for the app</span><b>"was 72.5 kg" next to a record.</b> The app knows the old best (it's what it compares against) but only says "New PR: Bench press".</li>
+        <li><span class="new">New for the app</span><b>First workout ever.</b> Today the app counts every lift of a first workout as a PR (there's nothing to beat). The design shows "First time" instead, so the records stay meaningful.</li>
+        <li><span class="new">New for the app</span><b>Wording and colors:</b> "Done" instead of "Nice!", "down" in grey instead of orange, "Next time" in white instead of the accent color.</li>
+        <li><span class="new">New for the app</span><b>Direction C's pages</b> are a new pattern; the content on them is all existing.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script>
+    const LABELS = { normal: 'Normal workout', prs: 'With records', weekfirst: "Week's first (6 → 7)", best: 'New best streak', partial: 'Short workout', firstever: 'First workout ever', long: 'Long names', added: 'Added exercise + cardio' };
+    let cur = 'normal';
+    const frames = [...document.querySelectorAll('iframe[data-dir]')];
+    const statesEl = document.getElementById('states');
+    statesEl.innerHTML = Object.entries(LABELS).map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="${k === cur}">${l}</button>`).join('');
+    const mark = () => document.querySelectorAll('#st-rows tr').forEach((r) => r.classList.toggle('cur', r.dataset.k === cur));
+    const post = (f) => f.contentWindow?.postMessage({ ogState: cur }, '*');
+    frames.forEach((f) => {
+      f.addEventListener('load', () => post(f));
+      f.src = `summary-phone.html?dir=${f.dataset.dir}&state=${cur}`;
+    });
+    statesEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-k]'); if (!b) return;
+      cur = b.dataset.k;
+      statesEl.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      frames.forEach(post); mark();
+    });
+    mark();
+  </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Round 1d · Today restructured</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --line: #26282d; --lime: #a3e635;
+      --body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1320px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0 0 16px; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    section { margin-top: 56px; }
+    .phones { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+    .dev { display: grid; gap: 12px; justify-items: center; }
+    .dev .cap { font-size: 14px; color: var(--ink-2); }
+    .dev .cap b { color: var(--ink); font-weight: 600; }
+    .dev a { color: var(--ink-2); font-size: 14px; }
+    iframe { border: 0; display: block; background: var(--bg); }
+    .f-ios { width: 481px; height: 940px; }
+    .f-android { width: 496px; height: 1000px; }
+
+    .browser { margin: 0 auto; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line), 0 30px 60px -20px rgba(0,0,0,.6); transition: width 280ms cubic-bezier(.32,.72,0,1); }
+    .bar { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 16px; background: #1b1c1f; border-bottom: 1px solid var(--line); }
+    .dots { display: flex; gap: 8px; }
+    .dots i { width: 12px; height: 12px; border-radius: 50%; background: #3a3b40; }
+    .url { flex: 1; min-width: 0; max-width: 420px; margin: 0 auto; height: 28px; border-radius: 8px; background: #0f1012; color: var(--ink-2); font: 13px/28px var(--mono); text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 12px; }
+    .browser iframe { width: 100%; height: 820px; }
+    .web-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #1b1c1f; }
+    .seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible, a:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+
+    .grid2 { display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .grid2 { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); } }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { text-align: left; vertical-align: top; padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); }
+    th { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    td:first-child { color: var(--ink-2); width: 22%; }
+    .sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
+    .sw div { display: grid; gap: 4px; font-size: 13px; }
+    .sw i { display: block; height: 40px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+    .sw span { display: block; font: 12px var(--mono); color: var(--ink-2); }
+    .type { display: grid; gap: 12px; margin-top: 24px; }
+    .type div { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: baseline; gap: 12px; }
+    .type small { font: 12px/1.4 var(--mono); color: var(--ink-2); }
+    .cond { font-family: "Barlow Condensed", sans-serif; font-weight: 800; text-transform: uppercase; line-height: 1; }
+    .rules { margin: 24px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .rules li { margin-bottom: 8px; }
+    .rules b { color: var(--ink); font-weight: 600; }
+    @media (max-width: 560px) {
+      body { padding: 24px 16px 64px; }
+      h1 { font-size: 36px; }
+      .f-ios, .f-android { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Round 1d · Today restructured</div>
+      <h1>One system, three platforms</h1>
+      <p class="lede"><b style="color:var(--ink)">What changed:</b> today's workout comes first, with Start right under it. The week strip and streak share one card. Body weight is one slim row (the full chart moves to Progress). Check in only shows on a workout day before you start. The tabs match the real app again: Today · Plan · Start · Progress · Exercises. The middle Start button is outlined until a workout runs, then it turns into an orange live timer.</p>
+      <p class="lede" style="margin-top:12px">System 1b (Apple-style structure, bold condensed titles and numbers), adapted for iOS, Android and the web. Colors, type, shapes and content are the same everywhere. Only navigation, body font, sheets and the wide-screen layout change, so each platform feels native. Each screen below is live: pick a day, start the workout, log a weigh-in.</p>
+    </header>
+
+    <section aria-labelledby="h-states" style="margin-top:32px">
+      <h2 id="h-states" style="font-size:20px;margin-bottom:12px">Preview a state (all three platforms)</h2>
+      <div class="seg" role="group" aria-label="Screen state" id="states">
+        <button type="button" data-s="normal" aria-pressed="true">Workout day</button>
+        <button type="button" data-s="active" aria-pressed="false">In progress</button>
+        <button type="button" data-s="done" aria-pressed="false">Done today</button>
+        <button type="button" data-s="multi" aria-pressed="false">Two routines</button>
+        <button type="button" data-s="rest" aria-pressed="false">Rest day</button>
+        <button type="button" data-s="first" aria-pressed="false">First run</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-phones">
+      <h2 id="h-phones">Phones</h2>
+      <div class="phones">
+        <div class="dev">
+          <iframe class="f-ios" src="today-ios.html" title="openGym Today on iOS"></iframe>
+          <div class="cap"><b>iOS</b> · translucent tab bar · pill toast · sheet with grabber</div>
+          <a href="today-ios.html" target="_blank" rel="noopener">Open on its own</a>
+        </div>
+        <div class="dev">
+          <iframe class="f-android" src="today-android.html" title="openGym Today on Android"></iframe>
+          <div class="cap"><b>Android</b> · Material nav bar with pill · 28px bottom sheet · snackbar</div>
+          <a href="today-android.html" target="_blank" rel="noopener">Open on its own</a>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-web">
+      <div class="web-tools">
+        <h2 id="h-web" style="margin:0">Web</h2>
+        <div class="seg" role="group" aria-label="Browser width">
+          <button type="button" data-w="1280" aria-pressed="true">Laptop · 1280</button>
+          <button type="button" data-w="820" aria-pressed="false">Tablet · 820</button>
+          <button type="button" data-w="390" aria-pressed="false">Phone browser · 390</button>
+        </div>
+      </div>
+      <div class="browser" id="browser" style="width:1280px">
+        <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url">opengym.local/today</span></div>
+        <iframe src="today-web.html" title="openGym Today on the web"></iframe>
+      </div>
+      <p class="lede" style="margin-top:16px">Sidebar and two columns from 1024px. Narrower windows switch to one column with a bottom bar. Weigh-in opens as a centered dialog from 640px, a bottom sheet below that. <a href="today-web.html" target="_blank" rel="noopener" style="color:var(--ink)">Open on its own</a> and resize the window to see it reflow.</p>
+    </section>
+
+    <section aria-labelledby="h-sys" class="grid2">
+      <div>
+        <h2 id="h-sys">Shared tokens</h2>
+        <div class="sw">
+          <div><i style="background:#000000"></i>Ground<span>#000000</span></div>
+          <div><i style="background:#1C1C1E"></i>Surface<span>#1C1C1E</span></div>
+          <div><i style="background:#2C2C2E"></i>Raised<span>#2C2C2E</span></div>
+          <div><i style="background:rgba(235,235,245,.66)"></i>Text 2<span>EBEBF5 · 66%</span></div>
+          <div><i style="background:#A3E635"></i>Accent<span>#A3E635</span></div>
+          <div><i style="background:#FF9F0A"></i>In progress<span>#FF9F0A</span></div>
+        </div>
+        <div class="type">
+          <div><small>Title 44/800</small><span class="cond" style="font-size:44px">Hi Kobi</span></div>
+          <div><small>Number 64/800</small><span class="cond" style="font-size:56px">80.9 <span style="font-size:22px;color:var(--ink-2)">KG</span></span></div>
+          <div><small>Body 16–17</small><span>Six exercises · about 55 min (platform font)</span></div>
+          <div><small>Label 13/600</small><span style="font-size:13px;font-weight:600;color:var(--ink-2)">This week</span></div>
+        </div>
+        <ul class="rules">
+          <li><b>Shape:</b> cards 16 · buttons 14 · chips fully round · 8pt spacing.</li>
+          <li><b>Accent use:</b> lime marks progress and the one main action per screen. Orange only means "in progress".</li>
+          <li><b>Condensed font:</b> titles, workout names and numbers only. Never body text or buttons.</li>
+          <li><b>Motion:</b> sheets open in 280ms, close in 180ms. Everything is instant with reduced motion on.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>What changes per platform</h2>
+        <table>
+          <thead><tr><th></th><th>iOS</th><th>Android</th><th>Web</th></tr></thead>
+          <tbody>
+            <tr><td>Body font</td><td>SF Pro</td><td>Roboto</td><td>System font</td></tr>
+            <tr><td>Main nav</td><td>Tab bar: Today · Plan · Start · Progress · Exercises</td><td>Same 5 items, pill behind the current icon</td><td>Sidebar from 1024px with Start on top, plus History, Body, Settings; bottom bar below</td></tr>
+            <tr><td>Start / timer</td><td colspan="3">Same everywhere: outlined while idle, solid orange live timer while a workout runs. The workout itself opens full screen with no tabs.</td></tr>
+            <tr><td>Back</td><td>Chevron + edge swipe</td><td>Arrow + system back</td><td>Browser back; page title shows where you are</td></tr>
+            <tr><td>Sheets</td><td>Sheet with grabber, radius 16</td><td>Bottom sheet, radius 28</td><td>Centered dialog from 640px</td></tr>
+            <tr><td>Messages</td><td>Pill toast, centered</td><td>Snackbar, left aligned</td><td>Snackbar, bottom center</td></tr>
+            <tr><td>Layout</td><td>One column</td><td>One column</td><td>Two columns from 1024px</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <script>
+    document.querySelectorAll('#states button').forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll('#states button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      document.querySelectorAll('iframe').forEach((f) => f.contentWindow?.postMessage({ ogState: b.dataset.s }, '*'));
+    }));
+    const browser = document.getElementById('browser');
+    document.querySelectorAll('.seg button').forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll('.seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      browser.style.width = b.dataset.w + 'px';
+    }));
+  </script>
+</body>
+</html>

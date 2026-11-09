@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "workout.html",
+  "entry": "workout.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:25:00.479Z",
+  "updatedAt": "2026-10-30T12:25:00.479Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

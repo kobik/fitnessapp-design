@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Today · Part 2 · Tab bar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="og/app.css" />
+  <link rel="stylesheet" href="og/v2.css" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1180px) { .dirs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header data-od-id="board-header">
+      <div class="eyebrow">openGym redesign · Today · Part 2 · iPhone</div>
+      <h1>Tab bar: capsule + raised disc</h1>
+      <p class="lede">A floating capsule with the workout button sitting in its centre, level with the other tabs. The button says <b>GO</b>, never a solid fill, so the hero's lime <b>Start workout</b> stays the only solid button on the screen. Tap tabs and GO in the phone; it works.</p>
+    </header>
+
+    <div class="controls" data-od-id="state-switch">
+      <h3 id="st-l">State</h3>
+      <div class="seg" role="group" aria-labelledby="st-l" id="states">
+        <button type="button" data-s="idle" aria-pressed="true">Idle on Home</button>
+        <button type="button" data-s="running" aria-pressed="false">Workout running</button>
+        <button type="button" data-s="plan" aria-pressed="false">Plan selected</button>
+      </div>
+      <h3 id="day-l">Day</h3>
+      <div class="seg" role="group" aria-labelledby="day-l" id="days">
+        <button type="button" data-d="push" aria-pressed="true">Push · lime</button>
+        <button type="button" data-d="legs" aria-pressed="false">Legs · orange</button>
+      </div>
+      <p class="hint">The running timer starts at 12:40 and keeps counting.</p>
+    </div>
+
+    <section class="one" data-od-id="dir-combo" aria-label="Capsule + raised disc">
+      <div class="dev"><iframe data-tabs="combo" title="Today with the capsule and raised disc tab bar"></iframe></div>
+      <div class="side">
+        <div><p class="cap">Full size</p><div class="bar1 og p-ios" data-rc="push" data-dir="full" data-strip="combo"></div></div>
+        <ul class="notes">
+          <li><b>Idle</b>An outlined disc in today's routine color with <b>GO</b> inside and no label; GO says it. Lime on Push, cyan on Pull, orange on Legs.</li>
+          <li><b>Running</b>GO turns into the white timer in the same spot and font, and a white ring fills as the session goes on. Tapping it resumes the workout.</li>
+          <li><b>During the workout</b>The bar is hidden and the workout fills the screen. Leaving it brings the bar back with the timer in the middle.</li>
+          <li><b>Selected tab</b>Turns white, sits on a soft pill, and its icon fills.</li>
+        </ul>
+        <div>
+          <h3>Icons</h3>
+          <div class="icons" id="icons"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="og/v2.js"></script>
+  <script>
+    const MODES = { idle: ['normal', 'Home'], running: ['active', 'Home'], plan: ['normal', 'Plan'] };
+    let cur = 'idle';
+    const strips = [...document.querySelectorAll('[data-strip]')].map((el) => OGv2.strip({ el, tabs: el.dataset.strip, day: 'push' }));
+    const frames = [...document.querySelectorAll('iframe[data-tabs]')];
+    const post = (f) => { const [ogState, ogTab] = MODES[cur]; f.contentWindow?.postMessage({ ogState }, '*'); f.contentWindow?.postMessage({ ogTab }, '*'); };
+    frames.forEach((f) => {
+      f.addEventListener('load', () => { if (cur !== 'idle') post(f); });
+    });
+    let day = 'push';
+    const load = () => frames.forEach((f) => { f.src = `today-v2-phone.html?dir=full&day=${day}&photo=full&tabs=${f.dataset.tabs}`; });
+    load();
+    document.getElementById('days').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-d]'); if (!b) return;
+      day = b.dataset.d;
+      document.querySelectorAll('#days button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      document.querySelectorAll('[data-strip]').forEach((el) => { el.dataset.day = day; el.dataset.rc = day; });
+      strips.forEach((st) => st.set(...MODES[cur]));
+      load();
+    });
+    const apply = () => { strips.forEach((s) => s.set(...MODES[cur])); frames.forEach(post); };
+    document.getElementById('states').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-s]'); if (!b) return;
+      cur = b.dataset.s;
+      document.querySelectorAll('#states button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      apply();
+    });
+    strips.forEach((s) => s.set(...MODES.idle));
+
+    // icon sheet: drawn from an offscreen bar so it's exactly the shipped glyphs
+    const tmp = document.createElement('div'); tmp.className = 'og';
+    const box = document.getElementById('icons');
+    const sheet = OGv2.strip({ el: tmp, tabs: 'combo', day: 'push' });
+    sheet.set('normal', 'none');
+    const off = [...tmp.querySelectorAll('.tb-i')].map((b) => [b.querySelector('svg').outerHTML, b.textContent.trim()]);
+    off.forEach(([svg, name]) => { box.insertAdjacentHTML('beforeend', `<div class="ic off">${svg}<span>${name}</span></div>`); });
+    off.forEach((_, i) => {
+      const name = off[i][1];
+      sheet.set('normal', name);
+      const svg = tmp.querySelector(`[data-tab="${name}"] svg`).outerHTML;
+      box.insertAdjacentHTML('beforeend', `<div class="ic">${svg}<span>${name} · on</span></div>`);
+    });
+
+  </script>
+</body>
+</html>

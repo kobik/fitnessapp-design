@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Today · Part 4 · Body weight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="og/app.css" />
+  <link rel="stylesheet" href="og/v2.css" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(3, 318px); justify-content: center; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n.on { color: var(--ink); }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    .scroll-note { font-size: 13px; color: var(--ink-2); margin: 0; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy .hl { display: block; font: 800 20px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--ink); }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Today · Part 4 · iPhone</div>
+      <h1>Body weight: week by week</h1>
+      <p class="lede"><b>Chosen: C, week by week.</b> A and B stay on the board for reference. The last section on Today, under the week. Each phone opens scrolled to the bottom, with the capsule over it. The big number is <b>this week's average</b>, the number openGym already uses, so one heavy morning doesn't swing it. Switch the situation to see each direction in every case. The last three are <b>goal moments</b>: they draw only what the app sends (table below). Click <b>Goal reached (moment)</b> again to replay it. Tap <b>Log</b> on any phone to try the weigh-in sheet.</p>
+    </header>
+    <div class="controls">
+      <h3 id="wc-l">Situation</h3>
+      <div class="seg" role="group" aria-labelledby="wc-l" id="cases"></div>
+    </div>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="dbig">
+        <div class="dir-head"><span class="n">Direction A</span><h2 id="dbig">Big number</h2></div>
+        <div class="dev"><iframe data-w="big" title="Today with the big number weight section"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>This week's average at hero size, then a sentence on the direction, then a white trend line across the full width with your goal as a dashed line.</li>
+          <li><b>Strength</b>It has the same energy as the hero and reads from arm's length. The line shows the whole month at a glance.</li>
+          <li><b>Risk</b>It's the tallest of the three. With the goal far away, the line looks flat, because the chart has to fit the goal in too.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="dtrack">
+        <div class="dir-head"><span class="n">Direction B</span><h2 id="dtrack">Goal track</h2></div>
+        <div class="dev"><iframe data-w="track" title="Today with the goal track weight section"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>One bar from where you started to your goal, with you on it, plus how much you've done so far and your weekly pace as a small tag.</li>
+          <li><b>Strength</b>It reads the same for losing or gaining, and it celebrates progress made, not just distance left.</li>
+          <li><b>Risk</b>It doesn't show day-to-day ups and downs. With no goal set, it has the least to show.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="dweeks">
+        <div class="dir-head"><span class="n on">Direction C · Chosen</span><h2 id="dweeks">Week by week</h2></div>
+        <div class="dev"><iframe data-w="weeks" title="Today with the week by week weight section"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>One column per week with its average written on top. This week is white, and your goal is a dashed line.</li>
+          <li><b>Strength</b>It matches the week strip above it and shows the habit as well as the direction. The numbers are all readable.</li>
+          <li><b>Risk</b>Changes of a few hundred grams make columns that look almost equal. The exact numbers on top carry the meaning.</li>
+        </ul>
+      </section>
+    </div>
+    <section class="copy" aria-labelledby="ad">
+      <h2 id="ad">Goal moments: what the app provides</h2>
+      <p class="lede">The screen doesn't decide any of this. The app sends one goal object with the fields below. If it sends nothing, the section shows no moment, band or checks, just the normal weekly view.</p>
+      <div class="tw"><table><thead><tr><th>Field</th><th>Meaning</th><th>Used for</th></tr></thead><tbody>
+        <tr><td>reached</td><td>The goal is reached, judged on the weekly average</td><td>Solid white goal line, "Holding range" line</td></tr>
+        <tr><td>celebrate</td><td>True only until the moment has been shown once. The app clears it afterwards.</td><td>"Goal reached" headline, the column rising</td></tr>
+        <tr><td>change, since</td><td>kg up or down since the first weigh-in, and that date</td><td>"You did it. 1.5 kg down since 29 Sep."</td></tr>
+        <tr><td>range</td><td>Holding range, ± kg around the goal</td><td>The soft band behind the columns</td></tr>
+        <tr><td>holdWeeks</td><td>Weeks in a row inside the range since reaching the goal</td><td>"3 weeks holding at your goal"</td></tr>
+        <tr><td>weekIn</td><td>For each week shown: inside the range or not</td><td>The white check under each column</td></tr>
+      </tbody></table></div>
+      <p class="lede" style="margin-top:16px"><b>New for the app:</b> openGym has a goal weight today, but no holding range, no "moment shown" flag and no holding count. All three would need adding. ±1 kg is a proposed default.</p>
+    </section>
+    <div class="shared">
+      <div><h3>Same in all three</h3><ul>
+        <li><b>No card, no lime.</b> It sits on black like the week. The trend is white, because lime means Push.</li>
+        <li><b>Honest direction.</b> Good or bad depends on your goal. Gaining toward a bulk goal reads as on track (try "Gaining to a bulk goal").</li>
+        <li><b>Encouraging, never guilt.</b> Away from goal reads "One week doesn't decide it." No red. The real app colors this red today, so this is a deliberate change.</li>
+        <li><b>Logged today</b> swaps Log for a quiet "✓ Logged". Tapping it lets you correct today's number, since the app keeps one weigh-in a day.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>A goal weight</b> that can be above or below you. The app works out gain or lose from it.</li>
+        <li><b>Weekly averages and a weekly pace.</b> The pace is a straight line through the last 3 weeks of weigh-ins, and it needs at least 4 of them, as in the mock.</li>
+        <li><b>kg or lb</b> for the whole profile. The mock shows kg only.</li>
+        <li><b>A weigh-in prompt before each workout</b> (users can turn it off). The Log button here may duplicate it, which is worth deciding.</li>
+        <li><b>Not built yet:</b> "Set a goal" here opens a placeholder. The app's goal sheet lives elsewhere today.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script src="og/v2.js"></script>
+  <script>
+    const CASES = OGv2.WT_CASES;
+    let wcase = 'trend';
+    const frames = [...document.querySelectorAll('iframe[data-w]')];
+    const casesEl = document.getElementById('cases');
+    casesEl.innerHTML = Object.entries(CASES).map(([k, c]) => `<button type="button" data-k="${k}" aria-pressed="${k === wcase}">${c.label}</button>`).join('');
+    const toBottom = (f) => { const sc = f.contentDocument?.querySelector('.od-scroll'); if (sc) sc.scrollTop = sc.scrollHeight; };
+    const post = (f) => { f.contentWindow?.postMessage({ ogWeight: wcase }, '*'); setTimeout(() => toBottom(f), 60); };
+    frames.forEach((f) => {
+      f.addEventListener('load', () => post(f));
+      f.src = `today-v2-phone.html?dir=full&day=push&photo=full&tabs=combo&week=score&streak=card&weight=${f.dataset.w}`;
+    });
+    casesEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-k]'); if (!b) return;
+      wcase = b.dataset.k;
+      casesEl.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      frames.forEach(post);
+    });
+  </script>
+</body>
+</html>

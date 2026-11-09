@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Round 1e · Today, with some energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --line: #26282d; --lime: #a3e635;
+      --push: #a3e635; --pull: #3ddcff; --legs: #ff8a3d;
+      --body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1040px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0 0 4px; font: 800 30px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { display: grid; gap: 16px; margin: 32px 0 8px; padding: 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--line); }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible, a:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 4px 0 0; }
+    .row { margin-top: 48px; }
+    .row-head { display: grid; gap: 4px; margin-bottom: 20px; }
+    .pick { display: inline-block; vertical-align: middle; margin-left: 8px; font: 700 12px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; color: #0b0c0e; background: var(--lime); padding: 5px 8px; border-radius: 6px; }
+    .phones { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+    .dev { display: grid; gap: 8px; justify-items: center; }
+    .dev .cap { font-size: 14px; color: var(--ink-2); }
+    .dev .cap b { color: var(--ink); font-weight: 600; }
+    iframe { border: 0; display: block; width: 481px; height: 940px; background: var(--bg); }
+    .notes { margin-top: 56px; display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .notes ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+    .notes li { margin-bottom: 8px; }
+    .notes li b { color: var(--ink); font-weight: 600; }
+    .chipc { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: baseline; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } iframe { width: 100%; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Round 1e · iPhone</div>
+      <h1>Today, with some energy</h1>
+      <p class="lede">Today's workout is now a poster: a huge workout name, the muscles you'll train lit up on a front and back body map, and one big Start button. <b>Top row</b> adds a color per routine, week bars that fill as you train, and weight as a big number over its trend line. <b>Bottom row</b> is the poster alone, lime only, for comparison. Each row shows a Push day and a Legs day.</p>
+    </header>
+
+    <div class="controls">
+      <div>
+        <h3>State (all phones)</h3>
+        <div class="seg" role="group" aria-label="Screen state" id="states">
+          <button type="button" data-s="normal" aria-pressed="true">Workout day</button>
+          <button type="button" data-s="active" aria-pressed="false">In progress</button>
+          <button type="button" data-s="done" aria-pressed="false">Done today</button>
+          <button type="button" data-s="rest" aria-pressed="false">Rest day</button>
+          <button type="button" data-s="first" aria-pressed="false">First run</button>
+        </div>
+      </div>
+      <div>
+        <h3>Tab bar icons (all phones)</h3>
+        <div class="seg" role="group" aria-label="Icon set" id="icons">
+          <button type="button" data-i="A" aria-pressed="true">Set A · bold outline, fills when selected</button>
+          <button type="button" data-i="B" aria-pressed="false">Set B · solid geometric, underline when selected</button>
+        </div>
+        <p class="hint">Look at the bottom of each phone. Tap a tab or Start to see the selected and running looks.</p>
+      </div>
+    </div>
+
+    <section class="row" aria-labelledby="r1">
+      <div class="row-head">
+        <h2 id="r1">Poster + routine colors + data <span class="pick">My pick</span></h2>
+        <p class="lede">The whole screen takes the color of today's routine. The week reads as a pattern of colored bars.</p>
+      </div>
+      <div class="phones">
+        <div class="dev"><iframe src="today-v2-phone.html?dir=full&day=push" title="Full direction, Push day"></iframe><div class="cap"><b>Push day</b> · lime</div></div>
+        <div class="dev"><iframe src="today-v2-phone.html?dir=full&day=legs" title="Full direction, Legs day"></iframe><div class="cap"><b>Legs day</b> · orange</div></div>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="r2">
+      <div class="row-head">
+        <h2 id="r2">Poster only</h2>
+        <p class="lede">Same poster and body map, lime for every routine, with the quieter week dots and slim weight row from the last round.</p>
+      </div>
+      <div class="phones">
+        <div class="dev"><iframe src="today-v2-phone.html?dir=poster&day=push" title="Poster only, Push day" loading="lazy"></iframe><div class="cap"><b>Push day</b></div></div>
+        <div class="dev"><iframe src="today-v2-phone.html?dir=poster&day=legs" title="Poster only, Legs day" loading="lazy"></iframe><div class="cap"><b>Legs day</b></div></div>
+      </div>
+    </section>
+
+    <section class="notes" aria-label="Notes">
+      <div>
+        <h2>Routine colors</h2>
+        <ul>
+          <li><span class="chipc" style="background:var(--push)"></span><b>Push</b> lime · <span class="chipc" style="background:var(--pull)"></span><b>Pull</b> cyan · <span class="chipc" style="background:var(--legs)"></span><b>Legs</b> orange.</li>
+          <li><b>Color only marks a routine.</b> It's never used for decoration, and text on it stays dark.</li>
+          <li><b>Running workout:</b> in the colored direction the Start button becomes a white timer, so it never clashes with Legs orange. In the poster-only direction it stays orange.</li>
+          <li>The body weight trend stays lime in every routine, since it isn't tied to one.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Tab icons</h2>
+        <ul>
+          <li><b>Set A:</b> Today is a sun on the horizon, Plan a calendar with workout dots, Progress a line rising to a peak, Exercises a barbell with plates. Thicker strokes, filled when selected.</li>
+          <li><b>Set B:</b> solid shapes on the same grid, uppercase condensed labels to match the titles, and a short colored underline under the current tab.</li>
+          <li>Both keep text labels. The current tab never relies on color alone (A fills, B underlines).</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+  <script>
+    const send = (msg) => document.querySelectorAll('iframe').forEach((f) => f.contentWindow?.postMessage(msg, '*'));
+    const wire = (id, key, attr) => document.querySelectorAll(`#${id} button`).forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll(`#${id} button`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      send({ [key]: b.dataset[attr] });
+    }));
+    wire('states', 'ogState', 's');
+    wire('icons', 'ogIcons', 'i');
+    // lazy frames load later: replay the current choices once they arrive
+    document.querySelectorAll('iframe').forEach((f) => f.addEventListener('load', () => {
+      const st = document.querySelector('#states [aria-pressed="true"]').dataset.s;
+      const ic = document.querySelector('#icons [aria-pressed="true"]').dataset.i;
+      if (st !== 'normal') f.contentWindow.postMessage({ ogState: st }, '*');
+      if (ic !== 'A') f.contentWindow.postMessage({ ogIcons: ic }, '*');
+    }));
+  </script>
+</body>
+</html>

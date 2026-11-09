@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Exercises</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="og/app.css" />
+  <link rel="stylesheet" href="og/v2.css" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(3, 318px); justify-content: center; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n.on { color: var(--ink); }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    .scroll-note { font-size: 13px; color: var(--ink-2); margin: 0; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy .hl { display: block; font: 800 20px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--ink); }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Exercises tab · iPhone</div>
+      <h1>Exercises: the library</h1>
+      <p class="lede">The fifth tab. It's where you look up any of the app's <b>5,632 exercises</b>, see how to do one, check <b>your own history and best</b> on it, put it in a routine, or make <b>your own exercise</b>. Three directions, one shared exercise sheet. Pick a situation to switch every phone at once. Everything is live: type in the search, tap muscles and equipment, open an exercise, star it, add it to a routine, create or delete your own (deleting asks first). <b>The mock holds 47 of the app's 5,632 exercises</b>, so its counts are smaller than the real ones.</p>
+    </header>
+    <div class="controls">
+      <h3 id="st-l">Situation</h3>
+      <div class="seg" role="group" aria-labelledby="st-l" id="states"></div>
+    </div>
+    <p class="hint" style="margin-top:12px" id="st-hint"></p>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="da">
+        <div class="dir-head"><span class="n">Direction A</span><h2 id="da">Search first</h2></div>
+        <div class="dev"><iframe data-d="search" title="Exercises, search first"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>The app's list, cleaned up. A search field at the top with a live count, a row of muscle chips, and equipment chips once you've narrowed things down. Favourites come first, then everything A to Z, each with your best on the right.</li>
+          <li><b>Strength</b>Closest to today's app, so nothing to relearn. Fastest when you know what you're looking for: two or three letters and it's there.</li>
+          <li><b>Risk</b>Browsing a 5,600-item list is a wall of rows. People who don't know the name of what they want get little help.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="db">
+        <div class="dir-head"><span class="n">Direction B</span><h2 id="db">Body map</h2></div>
+        <div class="dev"><iframe data-d="map" title="Exercises, browse by body map"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>A big front and back figure, the same one as on Home. Tap a muscle (or pick it from the list underneath) and it lights up white, then you see what trains it: mainly first, then exercises where it helps. Search hides behind a button.</li>
+          <li><b>Strength</b>Answers "what can I do for my shoulders?" in one tap. It folds the app's separate "By muscle" page into the tab and matches the Home look.</li>
+          <li><b>Risk</b>Searching by name takes one more tap. The figure is small for fingers, so the list of muscles below has to stay as the dependable way in.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="dc">
+        <div class="dir-head"><span class="n">Direction C</span><h2 id="dc">Yours first</h2></div>
+        <div class="dev"><iframe data-d="yours" title="Exercises, your exercises first"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>Starts with what you already do: the exercises in your plan, one routine at a time (Push A, Pull A, Legs) with your best, then your own exercises, then muscles to browse. Search results are split into "Yours" and "From the library".</li>
+          <li><b>Strength</b>Most visits are about an exercise you already do ("what did I bench last week?"). This puts that one tap away.</li>
+          <li><b>Risk</b>It repeats some of the Plan tab. A new user sees an empty top section, so the empty text has to do real work (try "New user").</li>
+        </ul>
+      </section>
+    </div>
+    <div class="shared">
+      <div><h3>Same in all three</h3><ul>
+        <li><b>One exercise sheet.</b> The animation at the top, then the name, main muscle and helpers, a small body map (main muscle white, helpers light grey), how-to steps, your history, and one solid button: <b>Add to a routine</b>.</li>
+        <li><b>Animations:</b> list rows show a still of each exercise and the sheet plays the clip, as in the app. The mock draws a stand-in figure; the app shows its own clip. Your own exercises show your photo or video, or "No photo or video yet".</li>
+        <li><b>History lives in the sheet.</b> Your best and how many sessions, a white line of your working weight, then your sessions with PRs, newest first. "Show more" opens up to the last 6, and "All 15 sessions in Progress" leads on from there. Bench press: 72.5 kg best, 15 sessions since July, last on 21 Oct (today's Push A isn't done yet).</li>
+        <li><b>Never done</b> reads "You haven't done this one yet" and says what will appear there, without any guilt.</li>
+        <li><b>Muscles are white, never a routine color.</b> Color only appears next to Push A, Pull A and Legs, where it marks the routine.</li>
+        <li><b>No dead ends.</b> No exact match shows close matches, a "Search all muscles" button when a filter is on, and "Create 'sissy squat'" with the name already filled in. Typos are forgiven ("lateral rasie" finds Lateral raise).</li>
+        <li><b>Long names</b> wrap to two lines in lists and in full on the sheet. Try "Long names", then open the landmine one.</li>
+        <li><b>Your own exercises</b> can be edited and deleted. Deleting asks first, and closing an unsaved new exercise asks before throwing it away. Until it can save, the form says what's missing.</li>
+        <li><b>The + on every row</b> goes straight to "Add to a routine", like the app's Plan button. A routine that already has the exercise shows a check and "Already in", and isn't a choice. Picking one says "Added to Pull A. Set its sets and weight in Plan."</li>
+        <li><b>A muscle filter never hides.</b> In B and C, searching while a muscle is picked shows a removable "Only Shoulders ×" chip above the results.</li>
+        <li><b>Equipment is optional</b> for your own exercises. Leave it empty and none is shown.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>Search</b> with a live count, typo tolerance, "yours first" while searching, and "No exact match. These come close".</li>
+        <li><b>Filters:</b> body part, type of exercise (strength, stretching, cardio and more) and equipment. Equipment choices come from what's left, so they never lead to nothing. There's also an equipment profile ("Showing what you have in Home gym").</li>
+        <li><b>Favourites</b> (star), which float to the top. A list or card view switch.</li>
+        <li><b>A separate "By muscle" page</b> with a body map, reached from a button on the list.</li>
+        <li><b>The exercise sheet:</b> animation, tags, description, how-to steps, best and last sets, a History sheet with a chart and sessions, an estimated 1-rep max calculator, plate loading and weight stack settings, alternate names, and "Suggest a fix".</li>
+        <li><b>Custom exercises:</b> name and body part, with optional equipment, muscles, photo or video, a link and a note. Edit and delete (with confirmation).</li>
+        <li><b>Add to my plan:</b> pick a routine or a new one, then sets, reps and weight.</li>
+      </ul>
+      <h3 style="margin-top:24px">New for the app</h3><ul>
+        <li><b>Muscle chips on the main list</b> (A) in place of body parts like "upper legs". The app only filters by muscle on its separate page.</li>
+        <li><b>The body map as the tab's front page</b> (B), with "mainly" and "also works" groups.</li>
+        <li><b>"In your plan" by routine and "Your own" as sections</b> (C), and search results split into Yours and Library.</li>
+        <li><b>History inside the exercise sheet</b> instead of a separate History sheet, showing the best and the session count, with older sessions handed over to Progress ("All 15 sessions in Progress").</li>
+        <li><b>The muscle body map on the exercise sheet</b>, under the animation.</li>
+        <li><b>"Search all muscles"</b> on an empty filtered search, and the "In Push A" line on the sheet.</li>
+        <li><b>Left out of the mock but kept:</b> the 1-rep max calculator, plate and stack settings, alternate names, type of exercise, the equipment profile and the card view. They'd sit lower on the sheet or in the filters, unchanged.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script>
+    const STATES = [
+      ['browse', 'Browsing', 'Opening the tab.'],
+      ['search', 'Searching', 'Typed "press": the count shows in the field, your exercises come first.'],
+      ['noresult', 'No exact match', 'Typed "sissy squat", which is not in the mock: close matches plus "create it".'],
+      ['muscle', 'Filtered by muscle', 'Shoulders picked: mainly shoulders first, then exercises where they help.'],
+      ['detail', 'Exercise with history', 'Bench press: best, last time, sessions, the trend and your last sets.'],
+      ['never', 'Never done', 'Cable rear delt row, which you have never logged.'],
+      ['long', 'Long names', 'Searched "landmine": a long name of your own next to a short one. Open it to see the sheet.'],
+      ['add', 'Add to a routine', 'Bench press is already in Push A.'],
+      ['create', 'Create your own', 'Started from the "sissy squat" search, so the name is filled in. Save stays off until a muscle is picked. Equipment can stay empty.'],
+      ['new', 'New user', 'No history, favourites or routines yet.']
+    ];
+    let cur = 'browse';
+    const frames = [...document.querySelectorAll('iframe[data-d]')];
+    const seg = document.getElementById('states'), hint = document.getElementById('st-hint');
+    seg.innerHTML = STATES.map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="${k === cur}">${l}</button>`).join('');
+    const setHint = () => { hint.textContent = STATES.find((x) => x[0] === cur)[2]; };
+    const post = (f) => f.contentWindow?.postMessage({ ogState: cur }, '*');
+    frames.forEach((f) => { f.addEventListener('load', () => post(f)); f.src = `exercises-phone.html?dir=${f.dataset.d}&state=${cur}`; });
+    seg.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-k]'); if (!b) return;
+      cur = b.dataset.k;
+      seg.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      setHint(); frames.forEach(post);
+    });
+    setHint();
+  </script>
+</body>
+</html>

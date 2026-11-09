@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "tabbar.html",
+  "entry": "tabbar.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-28T20:53:15.316Z",
+  "updatedAt": "2026-10-28T20:53:15.316Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

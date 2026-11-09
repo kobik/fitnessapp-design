@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "summary-phone.html",
+  "entry": "summary-phone.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:11:58.529Z",
+  "updatedAt": "2026-10-30T12:11:58.529Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

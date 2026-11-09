@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Today · Exercise animation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="og/app.css" />
+  <link rel="stylesheet" href="og/v2.css" />
+  <link rel="stylesheet" href="og/anim.css" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(3, 318px); justify-content: center; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    .scroll-note { font-size: 13px; color: var(--ink-2); margin: 0; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy .hl { display: block; font: 800 20px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--ink); }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+      .figs { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; margin-top: 16px; }
+    .figs figure { margin: 0; display: grid; gap: 8px; }
+    .figs figcaption { font-size: 13px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Exercise animation · iPhone</div>
+      <h1>Where you see the exercise animation</h1>
+      <p class="lede">The real app plays a short clip for each exercise. These mocks can’t use those clips, so a <b>looping white line figure</b> stands in, tagged <b>Animation</b>. It shows <b>where and how big</b> the clip appears, not what it looks like. It stops moving when the phone is set to reduce motion. Every phone works: tap a thumbnail to open the full view.</p>
+    </header>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="dA1">
+        <div class="dir-head"><span class="n">A1</span><h2 id="dA1">Workout A · Full</h2></div>
+        <div class="dev"><iframe src="workout-phone.html?dir=A&state=first&anim=full" title="Workout A with the animation at the top"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>The animation loops at the top of the one-set screen. The weight, reps and Log stay at the bottom where your thumb is.</li><li><b>Strength</b>You see the form while you set the weight, with no tap.</li><li><b>Risk</b>Takes the top of the screen. On small phones, less room for the exercise name.</li></ul>
+      </section>
+      <section class="dir" aria-labelledby="dA2">
+        <div class="dir-head"><span class="n">A2</span><h2 id="dA2">Workout A · Small</h2></div>
+        <div class="dev"><iframe src="workout-phone.html?dir=A&state=first&anim=small" title="Workout A with a thumbnail beside the name"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>A small still beside the exercise name. Tap it for the full view.</li><li><b>Strength</b>Calm screen for people who know the moves.</li><li><b>Risk</b>The form is one tap away, so beginners may skip it.</li></ul>
+      </section>
+      <section class="dir" aria-labelledby="dA3">
+        <div class="dir-head"><span class="n">A3</span><h2 id="dA3">Full view (tap to open)</h2></div>
+        <div class="dev"><iframe src="workout-phone.html?dir=A&state=first&anim=small&open=anim" title="The full-screen animation with how-to steps"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>The animation large, with the app’s own how-to steps under it. Close with X, Escape or a tap outside.</li><li><b>Strength</b>One place to learn a move, the same from every screen.</li><li><b>Risk</b>Covers the workout, so it must stay one tap to close.</li></ul>
+      </section>
+      <section class="dir" aria-labelledby="dA4">
+        <div class="dir-head"><span class="n">A4</span><h2 id="dA4">Workout A · Resting</h2></div>
+        <div class="dev"><iframe src="workout-phone.html?dir=A&state=resting&anim=full" title="Workout A showing the next exercise while resting"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>While the rest timer runs, the animation shows the next exercise, marked “Up next”. <b>New for the app.</b></li><li><b>Strength</b>Uses the rest time to get ready for what’s next.</li><li><b>Risk</b>The picture changes under you, so the “Up next” label must be clear.</li></ul>
+      </section>
+      <section class="dir" aria-labelledby="dC">
+        <div class="dir-head"><span class="n">C</span><h2 id="dC">Workout C · Thumbnail</h2></div>
+        <div class="dev"><iframe src="workout-phone.html?dir=C&state=resting&anim=small" title="Workout C with a thumbnail on the current exercise"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>In the whole-session list, only the current exercise has a thumbnail. Tap for the full view.</li><li><b>Strength</b>Keeps the busy list readable.</li><li><b>Risk</b>Small, so it’s easy to miss.</li></ul>
+      </section>
+      <section class="dir" aria-labelledby="dX">
+        <div class="dir-head"><span class="n">X</span><h2 id="dX">Exercises · Exercise sheet</h2></div>
+        <div class="dev"><iframe src="exercises-phone.html?dir=search&state=browse&open=0025" title="The exercise sheet with the animation at the top"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>The animation large at the top of the exercise, the muscle map smaller below. List rows show a still.</li><li><b>Strength</b>Matches what people expect from an exercise library.</li><li><b>Risk</b>The muscle map moves down and gets smaller.</li></ul>
+      </section>
+      <section class="dir" aria-labelledby="dP">
+        <div class="dir-head"><span class="n">P</span><h2 id="dP">Plan · Routine editor</h2></div>
+        <div class="dev"><iframe src="plan-phone.html?dir=a&state=edit" title="The Plan routine editor with exercise stills"></iframe></div>
+        <ul class="notes"><li><b>What it is</b>A small still beside each exercise in a routine. Tap it for the how-to sheet.</li><li><b>Strength</b>Helps when building a routine with new exercises.</li><li><b>Risk</b>Order numbers were removed to keep room for long names.</li></ul>
+      </section>
+    </div>
+    <div class="shared">
+      <div><h3>Same everywhere</h3><ul>
+        <li><b>One full view.</b> Every thumbnail opens the same big animation with the how-to steps.</li>
+        <li><b>White and grey only.</b> The animation never takes a routine color.</li>
+        <li><b>Follows the app’s setting.</b> The app already has Full / Small / Hidden for workout animations. Full and Small are shown here; Hidden shows nothing.</li>
+        <li><b>Not on Summary or Progress.</b> Those screens are about results.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>Animations for its built-in exercises</b>, downloaded to the phone, with a still-only option to save battery.</li>
+        <li><b>Your own exercises have no clip.</b> They show “No photo or video yet”.</li>
+        <li><b>New for the app:</b> the “Up next” animation during rest, and stills in the Plan editor.</li>
+      </ul></div>
+    </div>
+    <section class="copy" aria-labelledby="mv">
+      <h2 id="mv">The stand-in movements</h2>
+      <p class="lede">The stand-in has a handful of basic movements, picked by the exercise name. The real clips replace all of them.</p>
+      <div class="figs" id="figs"></div>
+    </section>
+  </div>
+  <script src="og/anim.js"></script>
+  <script>
+    document.getElementById('figs').innerHTML = ["Bench press", "Overhead press", "Lateral raise", "Back squat", "Pull-up", "Triceps pushdown", "Barbell row", "Romanian deadlift", "Dips", "Barbell curl"].map((n) => `<figure>${OGAnim.figure(n, { tag: false })}<figcaption>${n}</figcaption></figure>`).join('');
+  </script>
+</body>
+</html>

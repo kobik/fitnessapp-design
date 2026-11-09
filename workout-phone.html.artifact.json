@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "workout-phone.html",
+  "entry": "workout-phone.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:16:25.155Z",
+  "updatedAt": "2026-10-30T12:16:25.155Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "today-android.html",
+  "entry": "today-android.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-28T17:51:41.599Z",
+  "updatedAt": "2026-10-28T17:51:41.599Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

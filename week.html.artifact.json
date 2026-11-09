@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "week.html",
+  "entry": "week.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-29T08:04:23.936Z",
+  "updatedAt": "2026-10-29T08:04:23.936Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

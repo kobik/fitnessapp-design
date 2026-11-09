@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Plan · iPhone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="og/app.css" />
+  <link rel="stylesheet" href="og/v2.css" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --b-bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --b-line: #26282d; --lime: #a3e635;
+      --b-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--b-bg); color: var(--ink); font: 400 16px/1.6 var(--b-body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0; font: 800 28px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 32px 0 0; padding: 16px 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .controls h3 { margin: 0; }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--b-body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button:hover { color: var(--ink); }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+    .one { display: grid; gap: 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    @media (min-width: 900px) { .one { grid-template-columns: 318px minmax(0, 520px); justify-content: center; justify-items: stretch; align-items: start; } }
+    .one .side { display: grid; gap: 28px; align-content: start; }
+    .dirs { display: grid; gap: 48px 32px; margin-top: 40px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1100px) { .dirs { grid-template-columns: repeat(3, 318px); justify-content: center; gap: 48px 56px; } }
+    .dir { display: grid; gap: 20px; align-content: start; }
+    .dir-head { display: grid; gap: 4px; }
+    .dir-head .n { font: 700 14px/1 var(--b-body); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; }
+    .cap { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+    .bar1 { width: 393px; max-width: 100%; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--b-line); }
+    .dev { width: 318px; height: 620px; overflow: hidden; }
+    .dev iframe { border: 0; display: block; width: 481px; height: 940px; transform: scale(.66); transform-origin: 0 0; background: var(--b-bg); }
+    .notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+    .notes b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .shared { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .shared { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shared ul { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); }
+    .shared li { margin-bottom: 8px; }
+    .shared li b { color: var(--ink); font-weight: 600; }
+    .icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ic { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 12px 0 10px; border-radius: 12px; background: #17181b; color: var(--ink); font-size: 12px; --od-icon-size: 28px; --cut: #17181b; }
+    .ic.off { color: var(--ink-2); }
+    .scroll-note { font-size: 13px; color: var(--ink-2); margin: 0; }
+    .copy { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--b-line); }
+    .copy table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+    .copy th, .copy td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--b-line); }
+    .copy th { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+    .copy td { color: var(--ink-2); }
+    .copy td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .copy td b { color: var(--ink); font-weight: 600; }
+    .copy .hl { display: block; font: 800 20px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--ink); }
+    .copy tr.cur td { background: #17181b; }
+    .tw { overflow-x: auto; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } }
+      .dir-head .n.tag-near { color: var(--ink); }
+    .states-note { margin: 16px 0 0; }
+    .copy td:first-child { white-space: normal; }
+    .dir.is-dropped { opacity: .55; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Plan tab · iPhone</div>
+      <h1>Plan: the week and the routines</h1>
+      <p class="lede">The Plan tab answers two questions: <b>what do I train on which day</b>, and <b>what is in each routine</b>. Below are three directions, each a working phone. Use the switch to put all three in the same situation. Inside a phone you can tap days, open routines, change sets, reps, weight and rest, add or remove exercises, delete a routine and load a starter plan. Every delete and every discard asks first. The sample week is the same one Today uses: Legs on Monday (done), Push A today (Wednesday), Pull A on Friday, Legs on Saturday.</p>
+    </header>
+    <div class="controls">
+      <h3 id="st-l">Situation</h3>
+      <div class="seg" role="group" aria-labelledby="st-l" id="states">
+        <button type="button" data-s="normal" aria-pressed="true">Plan</button>
+        <button type="button" data-s="routines" aria-pressed="false">Routines list</button>
+        <button type="button" data-s="first" aria-pressed="false">No plan yet</button>
+        <button type="button" data-s="long" aria-pressed="false">Long names</button>
+        <button type="button" data-s="loop" aria-pressed="false">Rotation</button>
+        <button type="button" data-s="edit" aria-pressed="false">Editing a routine</button>
+        <button type="button" data-s="unsaved" aria-pressed="false">Unsaved changes</button>
+        <button type="button" data-s="delete" aria-pressed="false">Delete routine</button>
+        <button type="button" data-s="newr" aria-pressed="false">New routine</button>
+        <button type="button" data-s="settings" aria-pressed="false">Settings: Plan layout</button>
+      </div>
+      <p class="hint" id="hint"></p>
+    </div>
+    <div class="dirs">
+      <section class="dir" aria-labelledby="da">
+        <div class="dir-head"><span class="n"><span class="new">Default</span>Direction A</span><h2 id="da">Two lists · "Lists"</h2></div>
+        <div class="dev"><iframe data-dir="a" title="Plan, direction A: two lists, the default layout"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>The app's own layout, restyled: a Schedule | Routines switch, the week as seven rows, routines as a list. This is what everyone sees first.</li>
+          <li><b>Editing</b>A routine opens in the same editor as C, built like workout C: the whole routine as a list, then one exercise opened full with its sets as big rows. Each set has its own reps and weight. One rule: nothing changes until Save.</li>
+          <li><b>Settings</b>The gear at the top opens Settings. "Plan layout: Lists · Cards" switches this same phone to C and back. In the app, Settings lives in its own place; the gear is a stand-in until that screen is designed.</li>
+        </ul>
+      </section>
+      <section class="dir" aria-labelledby="dc">
+        <div class="dir-head"><span class="n"><span class="new">In Settings</span>Direction C</span><h2 id="dc">Routine cards · "Cards"</h2></div>
+        <div class="dev"><iframe data-dir="c" title="Plan, direction C: routine cards, the layout you can switch to in Settings"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>Routine first. Each routine is a card with its own Mo–Su day buttons, so you plan the week by tapping days on a card, with Undo. Pick it in Settings under "Plan layout: Cards".</li>
+          <li><b>Editing</b>The shared editor: tap an exercise to open it, tap a set to change it with big + / − controls. Changed sets get a white rule. A save bar floats above the tab bar while anything is unsaved.</li>
+          <li><b>Trade-off</b>To see "what's on Friday" you scan the cards, which is why it's the option and A is the default.</li>
+        </ul>
+      </section>
+      <section class="dir is-dropped" aria-labelledby="db">
+        <div class="dir-head"><span class="n">Direction B · Dropped</span><h2 id="db">Week board</h2></div>
+        <div class="dev"><iframe data-dir="b" title="Plan, direction B: week board"></iframe></div>
+        <ul class="notes">
+          <li><b>What it is</b>One page. The week is a big timetable with each routine name in its color, set in the same bold type as the Today hero. Routine tiles sit underneath. A routine opens full screen as a draft with Cancel and Save. A white strip counts the unsaved changes.</li>
+          <li><b>Strength</b>The whole week reads at arm's length, and it looks like Today. Editing has one rule: nothing changes until Save, and Cancel asks first if anything would be lost.</li>
+          <li><b>Risk</b>The longest page. With long routine names the timetable wraps to two lines a day. Draft editing is new for the app, which saves every change at once today.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="copy" aria-labelledby="sc">
+      <h2 id="sc">The situations</h2>
+      <div class="tw"><table><thead><tr><th>Situation</th><th>A · Two lists</th><th>B · Week board</th><th>C · Routine cards</th></tr></thead><tbody>
+        <tr data-k="normal"><td>Plan</td><td>Schedule view: seven day rows, the weekly pattern only. Today isn't marked; the Today screen already says what's on.</td><td>The timetable, then routine tiles.</td><td>Three cards with their days filled in.</td></tr>
+        <tr data-k="routines"><td>Routines list</td><td>The Routines view. Edit shows arrows to reorder and a minus to delete (it asks first).</td><td>Scrolled to the tiles.</td><td>Same as Plan: the cards are the list.</td></tr>
+        <tr data-k="first"><td>No plan yet</td><td colspan="3">The same everywhere: "No plan yet", <b>Load starter plan</b> (the one solid button) and New routine. The starter sheet lists the app's four plans. In this mock only Push / Pull / Legs loads, onto Monday, Wednesday and Friday, as in the app.</td></tr>
+        <tr data-k="long"><td>Long names</td><td>Pull A becomes "Pull A · Back thickness and biceps, heavy 6-week block". The lateral raise gets a long name too: open Push A to see it. Rows cut a long name off with "…"; the routine's own title wraps onto more lines rather than being cut.</td><td colspan="2">Timetable and tiles wrap (two and three lines). In C the card title wraps; list rows give an exercise name two lines, and the open exercise shows its full name in smaller type.</td></tr>
+        <tr data-k="loop"><td>Rotation</td><td>"How you train" is set to Rotation: a numbered loop with Done, Up next and Later, and Edit / Add / Start the loop over. Done routines stay where they are; the arrows only reorder what is still to come.</td><td>The loop in big type, numbered 01, 02, 03.</td><td>Cards sort into loop order, each showing its place, with arrows to reorder what is still to come.</td></tr>
+        <tr data-k="edit"><td>Editing a routine</td><td>Opens the shared editor, the same as C.</td><td>Full-screen draft. Tap an exercise to open its steppers and Up / Down / Remove.</td><td>The shared editor: Push A's six exercises as a list, each with "4 sets · 8 reps · 75 kg · rest 2:30" for Bench press. Tap one to open it full: its sets as big rows, Add set, rest, and ‹ › to the next exercise.</td></tr>
+        <tr data-k="unsaved"><td>Unsaved changes</td><td>Opens the shared editor, the same as C.</td><td>The same two changes. The white strip says "2 unsaved changes". The row is marked Changed and Save lights up, at the top and again at the bottom. The bar and strip stay pinned under the status bar as you scroll. Cancel asks first.</td><td>Opens on Bench press: sets 1 and 2 go 75 → 77.5 kg, each marked with a white rule and "was 75 kg". The save bar says "2 unsaved changes"; Back and a tab ask first.</td></tr>
+        <tr data-k="delete"><td>Delete routine</td><td colspan="3">A centered question: "Delete Push A?" It names what goes (its 6 exercises), says Wednesday becomes a rest day, and says past workouts stay. Cancel has the focus, and Delete is red.</td></tr>
+        <tr data-k="newr"><td>New routine</td><td>Opens the shared editor, the same as C.</td><td colspan="2">An empty draft. It isn't kept until you add something and Save.</td></tr>
+        <tr data-k="settings"><td>Settings: Plan layout</td><td colspan="3">A and C open the stand-in Settings page with one row, "Plan layout: Lists · Cards". Switching changes the Plan page right away; Back returns to Plan in the new layout. B has no Settings link.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <div class="shared">
+      <div><h3>Same in all three</h3><ul>
+        <li><b>Color only marks a routine.</b> Push lime, Pull cyan, Legs orange. A routine you make yourself is grey (picking a color for it is new, see below). Today, changes, "Up next" and the solid button are white.</li>
+        <li><b>Red only on destructive actions</b>: Delete routine, the list's delete minus and the Delete button in the question. Taking a routine out of the loop uses a grey minus, because it can be undone. This is the iOS standard, not decoration.</li>
+        <li><b>Unsaved is always visible.</b> A changed value gets a white rule, ring or dot, plus how many changes are waiting, until you save or discard.</li>
+        <li><b>Ask before losing anything.</b> Deleting a routine, discarding changes, Undo all and starting the loop over all ask first. Taking a routine out of the loop, or off a day in C, shows an Undo instead: nothing is deleted, and the routine stays.</li>
+        <li><b>One solid button per screen</b> (Load starter plan, Save, Done in a sheet). Everything else is outlined or text.</li>
+        <li><b>Exercise stills.</b> Every exercise row in the editor has a small still, and the open exercise shows a bigger one; tap it for a sheet with the moving animation, the name and a three-step how-to. The figure is a stand-in for the app's own clips.</li>
+        <li><b>Same numbers as Today.</b> Push A has 6 exercises and 20 sets, Pull A 6 and 20, Legs 5 and 19. The weights and rests are sample targets, the same on every phone.</li>
+        <li><b>The tab bar</b> is the locked capsule with Plan selected. The GO disc takes the color of today's routine (grey when nothing is planned today). B's editor covers it, like an iOS full-screen edit.</li>
+        <li><b>A copied routine</b> (Routine options › Copy routine in the editor) is grey until it gets its own color, so two routines never share one.</li>
+      </ul></div>
+      <div><h3>What the real app supports</h3><ul>
+        <li><b>Two ways to train</b>: Fixed week, or Rotation (a loop of routines and rest days, with Done / Up next / Later, "1 of 3 done this round" and Start the loop over). Fixed-day routines can ride along beside a loop.</li>
+        <li><b>A day can hold several routines</b>, trained together in the order picked. Tap a day, pick one or more, or Rest day.</li>
+        <li><b>Routines</b>: a name and icon, a progression rule, a deload switch, exercises with sets × reps, weight, rest, warm-ups, per side, last set to failure, pyramids, drop sets, backups and notes. Also supersets (A1, A2), Replace exercise, Copy, Print / Save as PDF and Delete.</li>
+        <li><b>Plan menu</b>: Export plan file, Print, Import a plan file, Load starter plan. The four starter plans can be fitted to an equipment profile (not shown here).</li>
+        <li><b>Reordering</b> by long-press drag, plus up and down arrows. The mock uses arrows only.</li>
+      </ul>
+      <h3 style="margin-top:24px">New for the app</h3><ul>
+        <li><b>Asking before a delete from the list.</b> Today the list's minus and swipe delete at once with an Undo toast; only the routine page asks. Here every delete asks.</li>
+        <li><b>Draft editing with a Save step</b> (all three). The app saves every change in the routine editor at once today.</li>
+        <li><b>"Discard N changes?"</b> when you leave the editor with unsaved changes, plus the save bar and the white rules on changed sets. Today the app's exercise sheet closes without a word and the edits are lost.</li>
+        <li><b>A color per routine.</b> The app gives each routine an icon. The redesign's color system needs a color per routine, and a way to pick one for routines you make.</li>
+        <li><b>Day buttons on each routine</b> (C) and <b>Undo after a day change</b>. The app assigns days through the day sheet only.</li>
+        <li><b>Asking before Start the loop over.</b> The app restarts the round with no question.</li>
+        <li><b>"Wednesday becomes a rest day"</b> in the delete question. The app's message names only the routine.</li>
+      </ul></div>
+    </div>
+  </div>
+  <script>
+    let state = 'normal';
+    const frames = [...document.querySelectorAll('iframe[data-dir]')];
+    const statesEl = document.getElementById('states'), hint = document.getElementById('hint');
+    const HINTS = {
+      normal: 'Tap a day (A, B) or a day button (C), or open a routine.',
+      routines: 'A shows its Routines view. Try Edit to reorder or delete.',
+      first: 'Tap Load starter plan, then Push / Pull / Legs.',
+      long: 'Open Push A to see the long exercise name too.',
+      loop: 'Try Edit, Add or Start the loop over.',
+      edit: 'Change a target, then try to leave.',
+      unsaved: 'Try Cancel, Back or a tab: each asks first.',
+      delete: 'Cancel keeps Push A; Delete removes it and frees Wednesday.',
+      newr: 'Add an exercise to see it marked New.',
+      settings: 'A and C open Settings. Switch Plan layout, then tap Back to Plan.'
+    };
+    const mark = () => { document.querySelectorAll('.copy tr[data-k]').forEach((r) => r.classList.toggle('cur', r.dataset.k === state)); hint.textContent = HINTS[state]; };
+    const post = (f) => f.contentWindow?.postMessage({ ogState: state }, '*');
+    frames.forEach((f) => { f.addEventListener('load', () => post(f)); f.src = `plan-phone.html?dir=${f.dataset.dir}&state=${state}`; });
+    statesEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-s]'); if (!b) return;
+      state = b.dataset.s;
+      statesEl.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      frames.forEach(post); mark();
+    });
+    mark();
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "progress.html",
+  "entry": "progress.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-30T12:15:49.046Z",
+  "updatedAt": "2026-10-30T12:15:49.046Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

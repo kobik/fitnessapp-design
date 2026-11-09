@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "today-web.html",
+  "entry": "today-web.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-28T17:51:47.980Z",
+  "updatedAt": "2026-10-28T17:51:47.980Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

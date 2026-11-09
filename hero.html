@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym · Today · Part 1 · Photo hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+    :root {
+      --bg: #101113; --ink: #f2f3f5; --ink-2: #a4a8b0; --line: #26282d; --lime: #a3e635;
+      --push: #a3e635; --pull: #3ddcff; --legs: #ff8a3d;
+      --body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); padding: 40px 24px 80px; }
+    .wrap { max-width: 1040px; margin: 0 auto; }
+    .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+    h1 { margin: 8px 0; font: 800 48px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+    h2 { margin: 0 0 4px; font: 800 30px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; }
+    h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .lede { max-width: 70ch; color: var(--ink-2); margin: 0; }
+    .lede b { color: var(--ink); font-weight: 600; }
+    .controls { display: grid; gap: 16px; margin: 32px 0 8px; padding: 20px; border-radius: 14px; background: #17181b; box-shadow: inset 0 0 0 1px var(--line); }
+    .seg { display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px; border-radius: 10px; background: #0d0e10; }
+    .seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: none; border: 0; min-height: 36px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: #2c2d31; color: var(--ink); }
+    .seg button:focus-visible, a:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .hint { font-size: 14px; color: var(--ink-2); margin: 4px 0 0; }
+    .row { margin-top: 48px; }
+    .row-head { display: grid; gap: 4px; margin-bottom: 20px; }
+    .pick { display: inline-block; vertical-align: middle; margin-left: 8px; font: 700 12px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; color: #0b0c0e; background: var(--lime); padding: 5px 8px; border-radius: 6px; }
+    .phones { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+    .dev { display: grid; gap: 8px; justify-items: center; }
+    .dev .cap { font-size: 14px; color: var(--ink-2); }
+    .dev .cap b { color: var(--ink); font-weight: 600; }
+    iframe { border: 0; display: block; width: 481px; height: 940px; background: var(--bg); }
+    .notes { margin-top: 56px; display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .notes ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+    .notes li { margin-bottom: 8px; }
+    .notes li b { color: var(--ink); font-weight: 600; }
+    .chipc { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: baseline; }
+    @media (max-width: 560px) { body { padding: 24px 16px 64px; } h1 { font-size: 36px; } iframe { width: 100%; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">openGym redesign · Today · Part 1 of 4 · Hero</div>
+      <h1>Photo hero</h1>
+      <p class="lede">Your Push photo in two layouts. <b>Full-bleed:</b> the photo fills the top of the screen and the workout name, muscles and Start sit on the dark bottom of the image. <b>Framed:</b> the photo is a tall rounded card and the title sits on black below it. Both drift very slowly (a 22-second push-in) and stay still when reduced motion is on. Only the hero is being judged here; everything below it is unchanged from the last round.</p>
+    </header>
+
+    <div class="controls">
+      <div>
+        <h3>State (both phones)</h3>
+        <div class="seg" role="group" aria-label="Screen state" id="states">
+          <button type="button" data-s="normal" aria-pressed="true">Workout day</button>
+          <button type="button" data-s="active" aria-pressed="false">In progress</button>
+          <button type="button" data-s="done" aria-pressed="false">Done today</button>
+          <button type="button" data-s="rest" aria-pressed="false">Rest day</button>
+        </div>
+        <p class="hint">Done today greys the photo out. Rest day and the other routines fall back to the body map until their photos are added. You can also tap Friday or Saturday in the week bars.</p>
+      </div>
+    </div>
+
+    <section class="row" aria-label="Hero layouts">
+      <div class="phones">
+        <div class="dev"><iframe src="today-v2-phone.html?dir=full&day=push&photo=full" title="Photo hero, full-bleed"></iframe><div class="cap"><b>A · Full-bleed</b></div></div>
+        <div class="dev"><iframe src="today-v2-phone.html?dir=full&day=push&photo=framed" title="Photo hero, framed"></iframe><div class="cap"><b>B · Framed</b></div></div>
+      </div>
+    </section>
+
+    <section class="notes" aria-label="Notes">
+      <div>
+        <h2>How it scales to the real app</h2>
+        <ul>
+          <li><b>One photo per muscle focus</b>, not per workout: Push, Pull, Legs, Shoulders, Arms, Core, Full body, Cardio, plus a rest-day photo. Custom routines pick theirs by main muscle group.</li>
+          <li><b>About 110 KB each</b> as JPG (your Push photo converted from 680 KB), so all of them ship inside the app and work offline.</li>
+          <li>The rim light in each photo matches its routine color, so photos and UI read as one system.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Still to add</h2>
+        <ul>
+          <li><b>Pull, Legs and rest-day photos:</b> save them as <code>pull.jpg</code>, <code>legs.jpg</code> and <code>rest.jpg</code> next to the Push photo and tell me, and I'll switch them on.</li>
+          <li><b>Next part:</b> the tab bar, including a Start button that fits the bar.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+  <script>
+    const send = (msg) => document.querySelectorAll('iframe').forEach((f) => f.contentWindow?.postMessage(msg, '*'));
+    const wire = (id, key, attr) => document.querySelectorAll(`#${id} button`).forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll(`#${id} button`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      send({ [key]: b.dataset[attr] });
+    }));
+    wire('states', 'ogState', 's');
+    // lazy frames load later: replay the current choices once they arrive
+    document.querySelectorAll('iframe').forEach((f) => f.addEventListener('load', () => {
+      const st = document.querySelector('#states [aria-pressed="true"]').dataset.s;
+      if (st !== 'normal') f.contentWindow.postMessage({ ogState: st }, '*');
+    }));
+  </script>
+</body>
+</html>

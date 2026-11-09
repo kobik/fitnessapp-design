@@ -1,0 +1,798 @@
+<!doctype html>
+<!--
+  Open Design · OD Next handheld shell — iPhone (Dynamic Island, left silent/volume keys, right power key).
+  Presentation shell for a phone-app prototype: keep the handset markup and
+  CSS, put the product inside the APP CONTENT slot (`.phone-content`). The
+  shell sets no typography, palette, spacing, or navigation for the app.
+  Derived from the Open Design mobile-app template (Apache-2.0).
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>openGym iOS · Round 1 · Design system</title>
+  <style>
+    /* Native hidden remains authoritative over component flex/grid styles. */
+    [hidden]:not([hidden="until-found" i]) { display: none !important; }
+
+    :root {
+      --phone-screen-width: 393px;
+      --phone-screen-height: 852px;
+      --phone-bezel: 12px;
+      --phone-outer-radius: 60px;
+      --phone-screen-radius: 48px;
+      --phone-safe-top: 59px;
+      --phone-safe-bottom: 34px;
+      --phone-system-fg: #111214;
+      --phone-screen-bg: #f7f7f8;
+      --phone-stage-bg: #e9ebee;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      background:
+        radial-gradient(circle at 50% 16%, rgba(255,255,255,.92), transparent 34%),
+        var(--phone-stage-bg, #e9ebee);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      color: #17181a;
+    }
+
+    .phone-frame {
+      position: relative;
+      width: calc(var(--phone-screen-width, 393px) + var(--phone-bezel, 12px) * 2);
+      height: calc(var(--phone-screen-height, 852px) + var(--phone-bezel, 12px) * 2);
+      padding: var(--phone-bezel, 12px);
+      border-radius: var(--phone-outer-radius, 60px);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.18), transparent 17%),
+        linear-gradient(160deg, #3a3a3d 0%, #1d1d20 47%, #09090b 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.13),
+        inset 0 0 0 2px rgba(0,0,0,.9),
+        0 34px 70px -20px rgba(0,0,0,.55),
+        0 12px 28px -12px rgba(0,0,0,.36);
+      isolation: isolate;
+    }
+
+    .phone-frame::before,
+    .phone-frame::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 102px;
+      bottom: 102px;
+      width: 3px;
+      border-radius: 3px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(255,255,255,.13) 12%,
+        transparent 22%,
+        transparent 78%,
+        rgba(255,255,255,.08) 90%,
+        transparent
+      );
+    }
+    .phone-frame::before { left: -1px; }
+    .phone-frame::after { right: -1px; }
+
+    .hardware-button {
+      position: absolute;
+      width: 4px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #050506, #242428 58%, #08080a);
+      box-shadow: inset 0 1px rgba(255,255,255,.08);
+    }
+    .hardware-button.silent { left: -3px; top: 175px; height: 34px; }
+    .hardware-button.volume-up { left: -3px; top: 225px; height: 62px; }
+    .hardware-button.volume-down { left: -3px; top: 299px; height: 62px; }
+    .hardware-button.power { right: -3px; top: 252px; height: 104px; }
+
+    .phone-screen {
+      position: relative;
+      width: var(--phone-screen-width, 393px);
+      height: var(--phone-screen-height, 852px);
+      overflow: hidden;
+      border-radius: var(--phone-screen-radius, 48px);
+      background: var(--phone-screen-bg, #f7f7f8);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+
+    .phone-content {
+      position: absolute;
+      inset: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-top: var(--phone-safe-top, 59px);
+      padding-bottom: var(--phone-safe-bottom, 34px);
+      background: var(--phone-screen-bg, #f7f7f8);
+    }
+    .phone-content::-webkit-scrollbar { display: none; }
+
+    .dynamic-island {
+      position: absolute;
+      z-index: 20;
+      top: 11px;
+      left: 50%;
+      width: 126px;
+      height: 37px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #000;
+      box-shadow: inset 0 -1px 1px rgba(255,255,255,.05);
+      pointer-events: none;
+    }
+
+    .status-bar {
+      position: absolute;
+      z-index: 15;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--phone-safe-top, 59px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 18px 27px 0;
+      color: var(--phone-system-fg, #111214);
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: -.01em;
+      pointer-events: none;
+    }
+    .status-icons { display: inline-flex; align-items: center; gap: 6px; }
+    .status-icons svg { display: block; width: 17px; height: 11px; fill: currentColor; }
+    .status-icons .battery { width: 25px; }
+
+    .home-indicator {
+      position: absolute;
+      z-index: 20;
+      left: 50%;
+      bottom: 8px;
+      width: 134px;
+      height: 5px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: var(--phone-system-fg, #111214);
+      opacity: .9;
+      pointer-events: none;
+    }
+
+
+    /* Presentation scaling: keep the whole handset visible on short viewports. */
+    @media (max-height: 939px) { .phone-frame { zoom: 0.9; } }
+    @media (max-height: 851px) { .phone-frame { zoom: 0.82; } }
+    @media (max-height: 781px) { .phone-frame { zoom: 0.74; } }
+    @media (max-height: 711px) { .phone-frame { zoom: 0.66; } }
+    /* Narrow viewports: the handset chrome collapses and the screen fills the
+       viewport, so the app behaves like a real phone page instead of
+       scrolling sideways. */
+    @media (max-width: 480px) {
+      body { padding: 0; display: block; }
+      .phone-frame { width: 100%; height: 100dvh; padding: 0; border-radius: 0; background: none; box-shadow: none; zoom: 1; }
+      .phone-frame::before, .phone-frame::after, .hardware-button { display: none; }
+      .phone-screen { width: 100%; height: 100%; border-radius: 0; }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+/* OD-LAYOUT-PRIMITIVES v1 — structure only: display, flex/grid, overflow, wrapping, ratio, geometry.
+   Put this @layer first; product CSS outside the layer wins ordinary layout rules.
+   Native hidden and closed-dialog states take precedence over component display rules. */
+@layer od-layout {
+  [hidden]:not([hidden="until-found" i]) { display: none !important; }
+  dialog:not([open]) { display: none !important; }
+
+  :where(.od-stack,.od-row,.od-row-top,.od-cluster,.od-grid,.od-field,.od-stat,.od-cell,.od-tile) > :where(*) { min-width: 0; }
+
+  .od-stack   { display: flex; flex-direction: column; gap: var(--od-gap, 8px); }
+  .od-row     { display: flex; align-items: center; gap: var(--od-gap, 8px); }
+  .od-row-top { display: flex; align-items: flex-start; gap: var(--od-gap, 8px); }
+  .od-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-gap, 8px); }
+  .od-fill    { flex: 1 1 0; min-width: 0; }
+  .od-fixed   { flex: none; }
+  .od-grid    { display: grid; gap: var(--od-gap, 12px); grid-template-columns: repeat(var(--od-cols, 3), minmax(0, 1fr)); }
+
+  .od-stat, .od-field, .od-cell { display: grid; gap: var(--od-gap, 2px); }
+  :where(.od-stat,.od-field,.od-cell) > :where(*) { display: block; }
+  .od-tile { display: grid; grid-template-rows: auto 1fr; }
+  :where(.od-tile) > :where(*) { display: block; }
+
+  .od-media { display: block; width: 100%; height: auto; aspect-ratio: var(--od-ratio, auto); }
+  .od-media-cover { object-fit: cover; }
+
+  .od-icon { display: inline-block; inline-size: var(--od-icon-size, 1em); block-size: var(--od-icon-size, 1em); flex: none; }
+
+  .od-truncate { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .od-clamp-2, .od-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .od-clamp-2 { -webkit-line-clamp: 2; }
+  .od-clamp-3 { -webkit-line-clamp: 3; }
+  .od-lines-2 { min-height: calc(2 * 1.4em); }
+  .od-nowrap  { white-space: nowrap; }
+  .od-keep    { word-break: keep-all; overflow-wrap: anywhere; }
+
+  .od-screen { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
+  .od-scroll { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+
+  .od-rail { display: flex; gap: var(--od-gap, 8px); overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+             padding-inline: var(--od-rail-pad, 16px); scroll-padding-inline: var(--od-rail-pad, 16px); }
+  .od-rail::-webkit-scrollbar { display: none; }
+  :where(.od-rail) > :where(*) { flex: none; scroll-snap-align: start; }
+  :where(.od-rail) > :where(:last-child) { margin-inline-end: var(--od-rail-pad, 16px); }
+
+  .od-spacer { flex: none; visibility: hidden; pointer-events: none; }
+  .od-touch  { min-width: 44px; min-height: 44px; }
+}
+:root [hidden]:where(:not([hidden="until-found" i])) { display: none; }
+/* /OD-LAYOUT-PRIMITIVES v1 */
+
+/* ───────── Board (comparison page, not app UI) ───────── */
+:root {
+  --board-bg: #101113;
+  --board-ink: #f2f3f5;
+  --board-ink-2: #a4a8b0;
+  --board-line: #26282d;
+  --brand-lime: #a3e635;
+}
+body { background: var(--board-bg); color: var(--board-ink); padding: 40px 24px 64px; display: block; }
+.board-head { max-width: 1360px; margin: 0 auto 40px; }
+.board-head .eyebrow { font: 600 13px/1.4 -apple-system, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-lime); }
+.board-head h1 { margin: 8px 0 8px; font: 700 40px/1.1 -apple-system, "SF Pro Display", system-ui, sans-serif; letter-spacing: -.03em; }
+.board-head p { margin: 0; max-width: 68ch; color: var(--board-ink-2); font-size: 16px; line-height: 1.6; }
+.board { display: flex; flex-wrap: wrap; justify-content: center; gap: 48px 40px; max-width: 1400px; margin: 0 auto; }
+.option { display: grid; gap: 20px; justify-items: center; width: 417px; }
+.opt-head { width: 100%; display: grid; gap: 6px; }
+.opt-head .num { font: 600 13px/1 -apple-system, system-ui, sans-serif; color: var(--board-ink-2); letter-spacing: .06em; text-transform: uppercase; }
+.opt-head h2 { margin: 0; font: 700 24px/1.2 -apple-system, system-ui, sans-serif; letter-spacing: -.02em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pick { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #0b0c0e; background: var(--brand-lime); padding: 4px 8px; border-radius: 6px; }
+.opt-head p { margin: 0; color: var(--board-ink-2); font-size: 15px; line-height: 1.5; }
+.opt-head .tradeoff { color: #d8dbe0; }
+.tokens { width: 100%; border-top: 1px solid var(--board-line); padding-top: 16px; display: grid; gap: 14px; font: 400 14px/1.4 -apple-system, system-ui, sans-serif; color: var(--board-ink-2); }
+.tokens h3 { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--board-ink-2); }
+.swatches { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 8px; }
+.sw { display: grid; gap: 6px; font-size: 12px; }
+.sw i { display: block; height: 36px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.sw b { display: block; font-weight: 500; color: var(--board-ink); }
+.sw span { display: block; font-family: ui-monospace, "SF Mono", monospace; font-size: 11px; }
+.typespec { display: grid; gap: 4px; color: var(--board-ink); }
+.typespec div { display: flex; align-items: baseline; gap: 12px; }
+.typespec small { width: 64px; flex: none; color: var(--board-ink-2); font: 400 12px/1.4 ui-monospace, "SF Mono", monospace; }
+.shape { display: flex; gap: 12px; flex-wrap: wrap; }
+.shape span { display: inline-flex; align-items: center; gap: 8px; }
+.shape i { width: 28px; height: 28px; border: 1.5px solid var(--board-ink-2); display: inline-block; }
+
+/* ───────── Shared app structure (each theme only swaps tokens + a few rules) ───────── */
+.phone-content:has(> .app) { padding: 0; }
+.app {
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr) auto;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.app .od-scroll { padding: var(--phone-safe-top, 59px) var(--pad) 24px; scrollbar-width: none; }
+.app .od-scroll::-webkit-scrollbar { display: none; }
+:where(.app button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.app :focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: var(--r-ctl); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+.hdr { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 8px 0 20px; }
+.hdr .date { color: var(--text-2); font-size: 15px; }
+.hdr h1 { margin: 0; font-family: var(--font-display); font-size: var(--title-size); font-weight: var(--title-weight); line-height: 1.05; letter-spacing: var(--title-track); text-transform: var(--title-case); }
+.iconbtn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 999px; background: var(--surface); color: var(--text); --od-icon-size: 22px; }
+
+.sec { display: grid; gap: var(--gap); }
+.card { background: var(--surface); border-radius: var(--r-card); box-shadow: var(--card-edge); padding: var(--card-pad); }
+.label { font-size: var(--label-size); font-weight: 600; color: var(--text-2); letter-spacing: var(--label-track); text-transform: var(--label-case); }
+
+/* week strip */
+.week { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 4px; margin-top: 12px; }
+.day { display: grid; justify-items: center; gap: 4px; padding: 8px 0 10px; border-radius: var(--r-ctl); min-height: 44px; }
+.day .dw { font-size: 12px; color: var(--text-3); font-weight: 600; letter-spacing: var(--label-track); text-transform: var(--label-case); }
+.day .dn { font-size: 18px; font-weight: 600; font-family: var(--font-num); }
+.day .dot { width: 6px; height: 6px; border-radius: 999px; }
+.day .dot.done { background: var(--acc); }
+.day .dot.plan { box-shadow: inset 0 0 0 1.5px var(--text-3); }
+.day .dot.rest { background: transparent; }
+.day.today .dn { color: var(--acc); }
+.day[aria-pressed="true"] { background: var(--surface-2); }
+
+/* today block */
+.today { margin-top: 12px; padding-top: 16px; border-top: var(--hair) solid var(--line); display: grid; gap: 14px; }
+.today .when { font-size: 13px; }
+.today h2 { margin: 2px 0 0; font-family: var(--font-display); font-size: var(--routine-size); font-weight: var(--title-weight); line-height: 1.1; letter-spacing: var(--title-track); text-transform: var(--title-case); }
+.today .meta { color: var(--text-2); font-size: 15px; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 13px; font-weight: 500; padding: 4px 10px; border-radius: var(--r-chip); background: var(--surface-2); color: var(--text-2); }
+.cta { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; width: 100%; border-radius: var(--r-btn); background: var(--acc); color: var(--on-acc) !important; font-weight: 650; font-size: 17px; letter-spacing: var(--btn-track); text-transform: var(--btn-case); font-family: var(--font-btn); --od-icon-size: 18px; transition: transform 150ms ease-out, background-color 150ms ease-out; }
+.cta:active { transform: scale(.98); }
+.cta.resume { background: var(--warn); }
+.cta.ghost { background: var(--surface-2); color: var(--text) !important; }
+.link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--text-2); font-size: 15px; font-weight: 500; --od-icon-size: 16px; }
+.tag { font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: var(--r-chip); }
+.tag.done { background: var(--acc-soft); color: var(--acc); }
+
+/* list row card */
+.rowcard { display: flex; align-items: center; gap: 12px; width: 100%; text-align: start; min-height: 64px; }
+.rowcard .ic { width: 36px; height: 36px; border-radius: var(--r-ic); display: grid; place-items: center; background: var(--surface-2); color: var(--acc); --od-icon-size: 20px; }
+.rowcard .t1 { font-weight: 600; font-size: 17px; }
+.rowcard .t2 { color: var(--text-2); font-size: 14px; }
+.rowcard .chev { color: var(--text-3); --od-icon-size: 18px; }
+
+/* weight */
+.wt-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.wt-head h3 { margin: 0; font-size: 17px; font-weight: 600; font-family: var(--font-h3); text-transform: var(--label-case); letter-spacing: var(--label-track); }
+.pillbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: var(--r-btn); background: var(--surface-2); font-size: 15px; font-weight: 600; --od-icon-size: 16px; position: relative; }
+.pillbtn::after { content: ""; position: absolute; inset: -4px 0; } /* 44px hit area */
+.wt-val { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.wt-val .big { font-size: var(--big-num); font-weight: var(--num-weight); line-height: 1; letter-spacing: -.02em; }
+.wt-val .unit { color: var(--text-2); font-size: 17px; }
+.delta { font-size: 15px; font-weight: 600; color: var(--acc); }
+.goalline { margin-top: 6px; color: var(--text-2); font-size: 14px; }
+.chart { margin-top: 12px; }
+.chart svg { display: block; width: 100%; height: 120px; }
+
+/* streak */
+.streak { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+.streak .od-stat .v { font-size: var(--stat-num); font-weight: var(--num-weight); line-height: 1.05; font-family: var(--font-num); }
+.streak .od-stat .c { color: var(--text-2); font-size: 13px; }
+
+/* tab bar */
+.tabbar { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); padding: 6px 4px var(--phone-safe-bottom, 34px); background: var(--bar-bg); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); border-top: var(--hair) solid var(--line); }
+.tab { display: grid; justify-items: center; gap: 2px; min-height: 48px; padding-top: 4px; color: var(--text-3); --od-icon-size: 24px; }
+.tab span { display: block; font-size: 11px; font-weight: 600; letter-spacing: var(--tab-track); text-transform: var(--label-case); }
+.tab[aria-current="page"] { color: var(--acc); }
+
+/* sheet + toast (mount inside .phone-screen so they inherit theme tokens) */
+.scrim { position: absolute; inset: 0; z-index: 30; background: rgba(0,0,0,.55); opacity: 0; transition: opacity 220ms ease-out; }
+.scrim.in { opacity: 1; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 31; background: var(--sheet-bg); color: var(--text); font-family: var(--font-body); border-radius: var(--r-sheet) var(--r-sheet) 0 0; padding: 8px var(--pad) calc(var(--phone-safe-bottom, 34px) + 12px); transform: translateY(100%); transition: transform 280ms cubic-bezier(.32,.72,0,1); display: grid; gap: 16px; }
+.sheet.in { transform: none; }
+.sheet .grab { width: 36px; height: 5px; border-radius: 999px; background: var(--text-3); justify-self: center; opacity: .6; }
+.sheet h4 { margin: 0; font-size: 20px; font-weight: 700; font-family: var(--font-display); text-transform: var(--title-case); letter-spacing: var(--title-track); }
+.stepper { display: grid; grid-template-columns: 64px 1fr 64px; align-items: center; gap: 12px; }
+.stepper button { height: 64px; border-radius: var(--r-btn); background: var(--surface-2); font-size: 28px; font-weight: 500; }
+.stepper output { text-align: center; font-family: var(--font-num); font-size: 48px; font-weight: var(--num-weight); }
+.stepper output small { font-size: 18px; color: var(--text-2); font-family: var(--font-body); margin-inline-start: 4px; }
+.sheet-actions { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+.sheet-actions button { min-height: 52px; border-radius: var(--r-btn); font-weight: 650; font-size: 17px; }
+.toast { position: absolute; z-index: 40; left: 16px; right: 16px; bottom: calc(var(--phone-safe-bottom, 34px) + 72px); background: var(--toast-bg); color: var(--toast-fg); font-family: var(--font-body); font-size: 15px; font-weight: 500; padding: 12px 16px; border-radius: var(--r-ctl); opacity: 0; transform: translateY(8px); transition: opacity 200ms ease-out, transform 200ms ease-out; pointer-events: none; }
+.toast.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .scrim, .toast, .cta { transition: none; }
+}
+
+/* ───────── Theme 1 · Apple HIG, refined ───────── */
+.t-apple {
+  --bg: #000000; --surface: #1c1c1e; --surface-2: #2c2c2e; --sheet-bg: #1c1c1e; --bar-bg: rgba(18,18,20,.82);
+  --line: rgba(84,84,88,.6); --hair: .5px;
+  --text: #ffffff; --text-2: rgba(235,235,245,.64); --text-3: rgba(235,235,245,.42);
+  --acc: #a3e635; --on-acc: #0b0f02; --acc-soft: rgba(163,230,53,.16); --warn: #ff9f0a;
+  --toast-bg: #3a3a3c; --toast-fg: #fff;
+  --font-body: -apple-system, "SF Pro Text", system-ui, sans-serif;
+  --font-display: -apple-system, "SF Pro Display", system-ui, sans-serif;
+  --font-num: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+  --font-btn: var(--font-body); --font-h3: var(--font-body);
+  --title-size: 34px; --title-weight: 700; --title-track: -.022em; --title-case: none;
+  --routine-size: 28px; --big-num: 44px; --stat-num: 28px; --num-weight: 700;
+  --label-size: 13px; --label-track: 0; --label-case: none; --tab-track: 0; --btn-track: -.01em; --btn-case: none;
+  --r-card: 16px; --r-ctl: 10px; --r-btn: 14px; --r-chip: 999px; --r-ic: 9px; --r-sheet: 16px;
+  --pad: 16px; --gap: 12px; --card-pad: 16px; --card-edge: none;
+  --phone-system-fg: #ffffff; --phone-screen-bg: #000000;
+}
+
+/* ───────── Theme 2 · Athletic bold ───────── */
+.t-athl {
+  --bg: #0a0a0a; --surface: #161616; --surface-2: #242424; --sheet-bg: #161616; --bar-bg: rgba(10,10,10,.92);
+  --line: #2a2a2a; --hair: 1px;
+  --text: #ffffff; --text-2: #b5b5b5; --text-3: #7d7d7d;
+  --acc: #c6ff3d; --on-acc: #0a0a0a; --acc-soft: rgba(198,255,61,.14); --warn: #ff8a1f;
+  --toast-bg: #ffffff; --toast-fg: #0a0a0a;
+  --font-body: "Barlow", -apple-system, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-num: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-btn: "Barlow Condensed", sans-serif; --font-h3: "Barlow Condensed", sans-serif;
+  --title-size: 44px; --title-weight: 800; --title-track: -.01em; --title-case: uppercase;
+  --routine-size: 52px; --big-num: 64px; --stat-num: 40px; --num-weight: 800;
+  --label-size: 13px; --label-track: .08em; --label-case: uppercase; --tab-track: .06em; --btn-track: .06em; --btn-case: uppercase;
+  --r-card: 4px; --r-ctl: 4px; --r-btn: 4px; --r-chip: 2px; --r-ic: 2px; --r-sheet: 8px;
+  --pad: 16px; --gap: 8px; --card-pad: 20px; --card-edge: none;
+  --phone-system-fg: #ffffff; --phone-screen-bg: #0a0a0a;
+}
+.t-athl .hero { background: var(--acc); color: var(--on-acc); }
+.t-athl .hero .label, .t-athl .hero .meta, .t-athl .hero .day .dw { color: rgba(10,10,10,.68); }
+.t-athl .hero .day .dot.done { background: var(--on-acc); }
+.t-athl .hero .day .dot.plan { box-shadow: inset 0 0 0 1.5px rgba(10,10,10,.6); }
+.t-athl .hero .day.today .dn { color: var(--on-acc); text-decoration: underline 3px; text-underline-offset: 4px; }
+.t-athl .hero .day[aria-pressed="true"] { background: rgba(10,10,10,.12); }
+.t-athl .hero .today { border-top-color: rgba(10,10,10,.25); }
+.t-athl .hero .chip { background: rgba(10,10,10,.12); color: var(--on-acc); }
+.t-athl .hero .cta { background: var(--on-acc); color: var(--acc) !important; }
+.t-athl .hero .cta.resume { background: var(--on-acc); color: var(--warn) !important; }
+.t-athl .hero .tag.done { background: var(--on-acc); color: var(--acc); }
+.t-athl .hero :focus-visible { outline-color: var(--on-acc); }
+.t-athl .today h2 { line-height: .95; }
+.t-athl .wt-val .unit { font-family: var(--font-display); font-size: 22px; font-weight: 700; text-transform: uppercase; }
+.t-athl .pillbtn { font-family: var(--font-btn); text-transform: uppercase; letter-spacing: .06em; }
+
+/* ───────── Theme 3 · Tool-dark (Linear-style) ───────── */
+.t-tool {
+  --bg: #08090a; --surface: #0f1011; --surface-2: #1a1b1e; --sheet-bg: #121314; --bar-bg: rgba(8,9,10,.88);
+  --line: #23252a; --hair: 1px;
+  --text: #f7f8f8; --text-2: #9ea1a8; --text-3: #6b6f76;
+  --acc: #a3e635; --on-acc: #08090a; --acc-soft: rgba(163,230,53,.12); --warn: #f0a33a;
+  --toast-bg: #1f2023; --toast-fg: #f7f8f8;
+  --font-body: "Geist", -apple-system, system-ui, sans-serif;
+  --font-display: "Geist", -apple-system, system-ui, sans-serif;
+  --font-num: "Geist Mono", ui-monospace, "SF Mono", monospace;
+  --font-btn: var(--font-body); --font-h3: var(--font-body);
+  --title-size: 28px; --title-weight: 600; --title-track: -.03em; --title-case: none;
+  --routine-size: 24px; --big-num: 36px; --stat-num: 22px; --num-weight: 500;
+  --label-size: 12px; --label-track: .06em; --label-case: uppercase; --tab-track: .02em; --btn-track: -.01em; --btn-case: none;
+  --r-card: 10px; --r-ctl: 6px; --r-btn: 8px; --r-chip: 6px; --r-ic: 6px; --r-sheet: 12px;
+  --pad: 16px; --gap: 8px; --card-pad: 16px; --card-edge: inset 0 0 0 1px #1f2125;
+  --phone-system-fg: #f7f8f8; --phone-screen-bg: #08090a;
+}
+.t-tool .cta { min-height: 48px; font-size: 16px; }
+.t-tool .iconbtn { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.t-tool .rowcard .ic { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.t-tool .chip { background: transparent; box-shadow: inset 0 0 0 1px var(--line); font-family: var(--font-num); font-size: 12px; }
+.t-tool .wt-head h3 { font-size: 12px; color: var(--text-2); }
+
+.t-boldtype {
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-num: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --title-size: 44px; --title-weight: 800; --title-track: -.01em; --title-case: uppercase;
+  --routine-size: 52px; --big-num: 64px; --stat-num: 40px; --num-weight: 800;
+}
+.t-boldtype .today h2 { line-height: .95; }
+.t-boldtype .wt-val .unit { font-family: var(--font-display); font-size: 22px; font-weight: 700; text-transform: uppercase; }
+.t-boldtype .chip { font-family: var(--font-body); }
+.board-sub { max-width: 1360px; margin: 64px auto 32px; border-top: 1px solid var(--board-line); padding-top: 40px; }
+.board-sub h2 { margin: 8px 0; font: 700 28px/1.2 -apple-system, system-ui, sans-serif; letter-spacing: -.02em; }
+
+@media (max-width: 480px) {
+  body { padding: 0; }
+  .board-head, .opt-head, .tokens { padding-inline: 16px; }
+  .board-head { margin: 24px 0; }
+  .board-head h1 { font-size: 30px; }
+  .option { width: 100%; }
+}
+  </style>
+</head>
+<body>
+  <header class="board-head">
+    <div class="eyebrow">openGym iOS redesign · Round 1</div>
+    <h1>Pick the design system</h1>
+    <p>The same Today screen with the same data, built in three systems. Tap around in each one: pick a day, start the workout, log a weigh-in. Lime is openGym's existing brand color, so it stays the accent in all three to keep the comparison fair.</p>
+  </header>
+
+  <div class="board">
+    <section class="option" data-theme="apple">
+      <div class="opt-head">
+        <div class="num">Option 1</div>
+        <h2>Apple HIG, refined <span class="pick">My pick</span></h2>
+        <p>Native iOS structure (large titles, grouped cards, SF Pro with rounded numbers) plus lime for progress and actions only.</p>
+        <p class="tradeoff">Best for: a long-lived, dense app. It scales to Plan, Stats and Settings without fighting the OS. Risk: it can look generic unless the numbers and the accent carry the character.</p>
+      </div>
+    </section>
+
+    <section class="option" data-theme="athl">
+      <div class="opt-head">
+        <div class="num">Option 2</div>
+        <h2>Athletic bold</h2>
+        <p>Condensed uppercase type, giant numbers, a solid lime hero block, sharp corners. High energy, made for the gym floor.</p>
+        <p class="tradeoff">Best for: the live workout screen and big at-a-glance numbers. Risk: gets loud and tiring on data-heavy screens like Plan, History and Settings.</p>
+      </div>
+    </section>
+
+    <section class="option" data-theme="tool">
+      <div class="opt-head">
+        <div class="num">Option 3</div>
+        <h2>Tool-dark (Linear-style)</h2>
+        <p>Near-black surfaces with hairline borders, Geist plus monospace numbers, small uppercase labels. Calm, precise, dense.</p>
+        <p class="tradeoff">Best for: power users who track lots of data. Risk: it feels like a dev tool, cool and not very motivating for a fitness app.</p>
+      </div>
+    </section>
+  </div>
+
+  <header class="board-head board-sub">
+    <div class="eyebrow">Round 1b · Hybrids</div>
+    <h2>Options 1 and 3, with option 2's titles and numbers</h2>
+    <p>Same screens, same colors and shapes as 1 and 3. Only the page title, workout name and numbers switch to the bold condensed style. Body text, labels and buttons stay as they were.</p>
+  </header>
+  <div class="board">
+    <section class="option" data-theme="apple boldtype">
+      <div class="opt-head">
+        <div class="num">Option 1b</div>
+        <h2>Apple HIG + bold numbers</h2>
+        <p>Native iOS cards and spacing, with condensed uppercase titles and large numbers for weight, streak and the workout name.</p>
+        <p class="tradeoff">Gives the native layout a sporty voice without option 2's loud lime block. Risk: the condensed font is not a system font, so it has to ship with the app.</p>
+      </div>
+    </section>
+    <section class="option" data-theme="tool boldtype">
+      <div class="opt-head">
+        <div class="num">Option 3b</div>
+        <h2>Tool-dark + bold numbers</h2>
+        <p>Hairline borders and a dense layout, with condensed uppercase titles and large numbers in place of the monospace numbers.</p>
+        <p class="tradeoff">Warmer and more motivating than plain 3. Risk: two strong type voices (small uppercase labels and big condensed numbers) compete on busy screens.</p>
+      </div>
+    </section>
+  </div>
+
+  <template id="phone-tpl">
+    <div class="phone-frame" data-phone-shell data-platform="iphone">
+      <span class="hardware-button silent" aria-hidden="true"></span>
+      <span class="hardware-button volume-up" aria-hidden="true"></span>
+      <span class="hardware-button volume-down" aria-hidden="true"></span>
+      <span class="hardware-button power" aria-hidden="true"></span>
+      <section class="phone-screen" data-phone-screen>
+        <main class="phone-content" data-phone-content>
+          <!-- APP CONTENT START -->
+          <!-- APP CONTENT END -->
+        </main>
+        <div class="status-bar" aria-hidden="true">
+          <span>9:41</span>
+          <span class="status-icons">
+            <svg viewBox="0 0 18 12"><path d="M1 10.5h2V8H1v2.5Zm4 0h2V5.5H5v5Zm4 0h2V3H9v7.5Zm4 0h2V.5h-2v10Z"/></svg>
+            <svg viewBox="0 0 18 12"><path d="M9 11.2 7.2 9.4a2.55 2.55 0 0 1 3.6 0L9 11.2Zm4.1-4.1-1.35 1.35a3.9 3.9 0 0 0-5.5 0L4.9 7.1a5.8 5.8 0 0 1 8.2 0Zm3-3-1.35 1.35a8.15 8.15 0 0 0-11.5 0L1.9 4.1a10.05 10.05 0 0 1 14.2 0Z"/></svg>
+            <svg class="battery" viewBox="0 0 27 12"><path fill-rule="evenodd" d="M2.5 1h19A2.5 2.5 0 0 1 24 3.5v5a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 0 8.5v-5A2.5 2.5 0 0 1 2.5 1Zm0 1A1.5 1.5 0 0 0 1 3.5v5A1.5 1.5 0 0 0 2.5 10h19A1.5 1.5 0 0 0 23 8.5v-5A1.5 1.5 0 0 0 21.5 2h-19Zm.5 1h17.5A1.5 1.5 0 0 1 22 4.5v3A1.5 1.5 0 0 1 20.5 9H3V3Zm22 1.5a1.5 1.5 0 0 1 0 3v-3Z"/></svg>
+          </span>
+        </div>
+        <div class="dynamic-island" aria-hidden="true"></div>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </section>
+    </div>
+  </template>
+
+<script>
+(() => {
+  // ── one icon family: 24px grid, 1.75 stroke, round caps ──
+  const P = {
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/>',
+    play: '<path d="M7 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L8.5 4.6A1 1 0 0 0 7 5.5Z"/>',
+    swap: '<path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/>',
+    qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
+    chev: '<path d="m9 6 6 6-6 6"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    today: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',
+    plan: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/>',
+    dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',
+    stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    more: '<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>',
+    check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>'
+  };
+  const icon = (n) => `<svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+
+  // ── sample data (same for all three) ──
+  const ROUTINES = {
+    push: { name: 'Push A', ex: 6, min: 55, muscles: ['Chest', 'Shoulders', 'Triceps'] },
+    pull: { name: 'Pull A', ex: 6, min: 50, muscles: ['Back', 'Biceps', 'Rear delts'] },
+    legs: { name: 'Legs', ex: 5, min: 60, muscles: ['Quads', 'Hamstrings', 'Glutes'] }
+  };
+  const WEEK = [ // Mon 26 Oct – Sun 1 Nov 2026; today = Wed 28
+    { dw: 'Mon', dn: 26, full: 'Monday 26 October', r: 'legs', st: 'done' },
+    { dw: 'Tue', dn: 27, full: 'Tuesday 27 October', r: null, st: 'rest' },
+    { dw: 'Wed', dn: 28, full: 'Wednesday 28 October', r: 'push', st: 'plan', today: true },
+    { dw: 'Thu', dn: 29, full: 'Thursday 29 October', r: null, st: 'rest' },
+    { dw: 'Fri', dn: 30, full: 'Friday 30 October', r: 'pull', st: 'plan' },
+    { dw: 'Sat', dn: 31, full: 'Saturday 31 October', r: 'legs', st: 'plan' },
+    { dw: 'Sun', dn: 1, full: 'Sunday 1 November', r: null, st: 'rest' }
+  ];
+  const baseWeights = [82.4,82.6,82.3,82.1,82.2,82.0,81.9,82.1,81.8,81.7,81.9,81.6,81.5,81.6,81.4,81.3,81.5,81.2,81.1,81.3,81.0,81.1,80.9,81.0,80.8,80.9,80.7,80.9,80.8,80.9];
+  const GOAL = 78.0;
+  const fmt = (n) => n.toFixed(1);
+
+  function chart(ws) {
+    const W = 300, H = 120, pad = 8;
+    const lo = Math.min(GOAL, ...ws) - .4, hi = Math.max(...ws) + .4;
+    const x = (i) => pad + (i / (ws.length - 1)) * (W - pad * 2);
+    const y = (v) => pad + (1 - (v - lo) / (hi - lo)) * (H - pad * 2);
+    const d = ws.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+    const last = ws.length - 1;
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Body weight, last 30 weigh-ins, from ${fmt(ws[0])} to ${fmt(ws[last])} kg. Goal ${fmt(GOAL)} kg.">
+      <line x1="${pad}" x2="${W - pad}" y1="${y(GOAL).toFixed(1)}" y2="${y(GOAL).toFixed(1)}" stroke="var(--text-3)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>
+      <path d="${d}" fill="none" stroke="var(--acc)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <circle cx="${x(last).toFixed(1)}" cy="${y(ws[last]).toFixed(1)}" r="4" fill="var(--acc)"/>
+    </svg>`;
+  }
+
+  function todayBlock(s) {
+    const d = WEEK[s.sel];
+    const when = d.today ? 'Today' : d.full;
+    if (!d.r) return `<div class="today"><div><div class="label when">${when}</div><h2>Rest day</h2><div class="meta">Recover. Your next session is ${ROUTINES[WEEK.slice(s.sel + 1).find(x => x.r)?.r || 'push'].name}.</div></div></div>`;
+    const r = ROUTINES[d.r];
+    const chips = `<div class="chips">${r.muscles.map(m => `<span class="chip">${m}</span>`).join('')}</div>`;
+    const head = `<div><div class="label when">${when}</div><h2>${r.name}</h2><div class="meta"><span class="od-nowrap">${r.ex} exercises</span> · <span class="od-nowrap">about ${r.min} min</span></div></div>`;
+    let action = '';
+    if (d.st === 'done') action = `<div><span class="tag done">Done · 58 min</span></div>`;
+    else if (d.today) action = s.active
+      ? `<button class="cta resume" data-act="start">${icon('play')}Resume · 2 of 6 done</button>`
+      : `<button class="cta" data-act="start">${icon('play')}Start workout</button>`;
+    else action = `<button class="cta ghost" data-act="early">Start this one now</button>`;
+    return `<div class="today">${head}${chips}${action}</div>`;
+  }
+
+  function render(s) {
+    const ws = s.weights, cur = ws[ws.length - 1], delta = cur - ws[0];
+    return `<div class="app od-screen">
+      <div class="od-scroll">
+        <header class="hdr">
+          <div><div class="date">Wednesday 28 October</div><h1>Hi Kobi</h1></div>
+          <button class="iconbtn" data-act="settings" aria-label="Settings">${icon('gear')}</button>
+        </header>
+        <div class="sec">
+          <section class="card hero" aria-label="This week">
+            <div class="label">This week</div>
+            <div class="week" role="group" aria-label="Pick a day">
+              ${WEEK.map((d, i) => `<button class="day${d.today ? ' today' : ''}" data-act="day" data-i="${i}" aria-pressed="${i === s.sel}" aria-label="${d.full}, ${d.r ? ROUTINES[d.r].name + (d.st === 'done' ? ', done' : ', planned') : 'rest day'}">
+                <span class="dw">${d.dw}</span><span class="dn">${d.dn}</span><span class="dot ${d.st}"></span></button>`).join('')}
+            </div>
+            ${todayBlock(s)}
+          </section>
+          <div><button class="link" data-act="other">${icon('swap')}Choose a different workout</button></div>
+
+          <button class="card rowcard" data-act="checkin">
+            <span class="ic">${icon('qr')}</span>
+            <span class="od-fill"><span class="t2" style="display:block">At the gym</span><span class="t1" style="display:block">Check in</span></span>
+            <span class="chev">${icon('chev')}</span>
+          </button>
+
+          <section class="card" aria-label="Body weight">
+            <div class="wt-head">
+              <h3>Body weight</h3>
+              <div class="od-row">
+                <button class="pillbtn" data-act="goal" aria-label="Goal ${fmt(GOAL)} kilograms">${icon('target')}<span class="num">${fmt(GOAL)}</span></button>
+                <button class="pillbtn" data-act="log">${icon('plus')}Log</button>
+              </div>
+            </div>
+            <div class="wt-val">
+              <span class="big num">${fmt(cur)}</span><span class="unit">kg</span>
+              <span class="delta num od-nowrap">${delta <= 0 ? '↓' : '↑'} ${fmt(Math.abs(delta))} kg in 30 days</span>
+            </div>
+            <div class="goalline"><span class="od-nowrap">${fmt(Math.max(0, cur - GOAL))} kg</span> to your goal</div>
+            <div class="chart">${chart(ws)}</div>
+          </section>
+
+          <section class="card" aria-label="Consistency">
+            <div class="label" style="margin-bottom:12px">Consistency</div>
+            <div class="streak">
+              <div class="od-stat"><span class="v">7</span><span class="c">week streak</span></div>
+              <div class="od-stat"><span class="v">${s.done}/4</span><span class="c">this week</span></div>
+              <div class="od-stat"><span class="v">${112 + s.done - 1}</span><span class="c">workouts total</span></div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <nav class="tabbar" aria-label="Main">
+        ${[['today','Today'],['plan','Plan'],['dumbbell','Workout'],['stats','Stats'],['more','More']].map(([ic, lb], i) =>
+          `<button class="tab" data-act="tab" data-tab="${lb}" ${i === 0 ? 'aria-current="page"' : ''}>${icon(ic)}<span>${lb}</span></button>`).join('')}
+      </nav>
+    </div>`;
+  }
+
+  function mount(option, theme) {
+    const frag = document.getElementById('phone-tpl').content.cloneNode(true);
+    const screen = frag.querySelector('.phone-screen');
+    const content = frag.querySelector('.phone-content');
+    const themes = theme.split(' ');
+    themes.forEach((t) => screen.classList.add('t-' + t));
+    const uid = themes.join('-');
+    const toastEl = document.createElement('div');
+    toastEl.className = 'toast'; toastEl.setAttribute('role', 'status');
+    screen.append(toastEl);
+    option.querySelector('.opt-head').after(frag.querySelector('.phone-frame'));
+    option.append(tokensFor(themes));
+
+    const s = { sel: 2, active: false, weights: baseWeights.slice(), done: 1 };
+    const draw = (focusSel) => {
+      const scroll = content.querySelector('.od-scroll');
+      const top = scroll ? scroll.scrollTop : 0;
+      content.innerHTML = render(s);
+      content.querySelector('.od-scroll').scrollTop = top;
+      if (focusSel) content.querySelector(focusSel)?.focus();
+    };
+    let toastT;
+    const toast = (msg) => {
+      toastEl.textContent = msg; toastEl.classList.add('in');
+      clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('in'), 2200);
+    };
+
+    // weigh-in sheet
+    let sheet = null;
+    function openSheet() {
+      let val = s.weights[s.weights.length - 1];
+      const scrim = document.createElement('div'); scrim.className = 'scrim';
+      const el = document.createElement('div');
+      el.className = 'sheet'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'sh-' + uid);
+      el.innerHTML = `<span class="grab" aria-hidden="true"></span>
+        <h4 id="sh-${uid}">Log weigh-in</h4>
+        <div class="stepper">
+          <button data-d="-0.1" aria-label="Decrease by 0.1 kg">−</button>
+          <output aria-live="polite"><span class="v">${fmt(val)}</span><small>kg</small></output>
+          <button data-d="0.1" aria-label="Increase by 0.1 kg">+</button>
+        </div>
+        <div class="sheet-actions">
+          <button data-x="cancel" style="background:var(--surface-2)">Cancel</button>
+          <button data-x="save" style="background:var(--acc);color:var(--on-acc)">Save</button>
+        </div>`;
+      screen.append(scrim, el);
+      requestAnimationFrame(() => { scrim.classList.add('in'); el.classList.add('in'); el.querySelector('[data-x="save"]').focus({ preventScroll: true }); });
+      const close = (saved) => {
+        scrim.classList.remove('in'); el.classList.remove('in');
+        setTimeout(() => { scrim.remove(); el.remove(); }, 200);
+        sheet = null;
+        if (saved) { s.weights.push(Math.round(val * 10) / 10); s.weights.shift(); draw(); toast(`Saved ${fmt(val)} kg`); }
+        content.querySelector('[data-act="log"]')?.focus();
+      };
+      el.addEventListener('click', (e) => {
+        const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.d) { val = Math.max(30, Math.min(250, val + Number(b.dataset.d))); el.querySelector('.v').textContent = fmt(val); }
+        if (b.dataset.x) close(b.dataset.x === 'save');
+      });
+      el.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(false); });
+      scrim.addEventListener('click', () => close(false));
+      sheet = el;
+    }
+
+    content.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-act]'); if (!b || sheet) return;
+      const act = b.dataset.act;
+      if (act === 'day') { s.sel = Number(b.dataset.i); draw(`[data-act="day"][data-i="${s.sel}"]`); }
+      else if (act === 'start') {
+        if (!s.active) { s.active = true; draw('[data-act="start"]'); toast('Workout started. The live screen comes in round 2.'); }
+        else toast('The live workout screen comes in round 2.');
+      }
+      else if (act === 'early') toast(`${ROUTINES[WEEK[s.sel].r].name} would replace today's Push A.`);
+      else if (act === 'log') openSheet();
+      else if (act === 'goal') toast('Goal editor comes with the Body weight screen.');
+      else if (act === 'checkin') toast('Check-in comes in a later round.');
+      else if (act === 'other') toast('Workout picker comes in round 3.');
+      else if (act === 'settings') toast('Settings comes in a later round.');
+      else if (act === 'tab' && b.dataset.tab !== 'Today') toast(`${b.dataset.tab} is a later round.`);
+    });
+    draw();
+  }
+
+  function tokensFor(themes) {
+    const theme = themes[0];
+    const T = {
+      apple: { sw: [['Ground','#000000'],['Surface','#1C1C1E'],['Raised','#2C2C2E'],['Text 2','#EBEBF5A3'],['Accent','#A3E635'],['Active','#FF9F0A']],
+        type: [['Title','34 / 700 SF Pro Display','font:700 26px -apple-system,system-ui;letter-spacing:-.02em'],['Number','44 / 700 SF Rounded','font:700 26px ui-rounded,-apple-system,system-ui'],['Body','16–17 / SF Pro Text','font:400 16px -apple-system,system-ui']],
+        shape: 'Radius 16 cards · 14 buttons · pill chips · 8pt spacing · hairline separators' },
+      athl: { sw: [['Ground','#0A0A0A'],['Surface','#161616'],['Raised','#242424'],['Text 2','#B5B5B5'],['Accent','#C6FF3D'],['Active','#FF8A1F']],
+        type: [['Title','44 / 800 Barlow Cond.','font:800 28px \'Barlow Condensed\',sans-serif;text-transform:uppercase'],['Number','64 / 800 Barlow Cond.','font:800 28px \'Barlow Condensed\',sans-serif'],['Body','16 / Barlow','font:400 16px Barlow,sans-serif']],
+        shape: 'Radius 4 cards and buttons · 2 chips · 8pt spacing · uppercase labels and buttons' },
+      tool: { sw: [['Ground','#08090A'],['Surface','#0F1011'],['Border','#23252A'],['Text 2','#9EA1A8'],['Accent','#A3E635'],['Active','#F0A33A']],
+        type: [['Title','28 / 600 Geist','font:600 24px Geist,sans-serif;letter-spacing:-.03em'],['Number','36 / 500 Geist Mono','font:500 22px \'Geist Mono\',monospace'],['Body','16 / Geist','font:400 16px Geist,sans-serif']],
+        shape: 'Radius 10 cards · 8 buttons · 6 chips · 1px borders instead of fills · 8pt spacing' }
+    }[theme];
+    if (themes.includes('boldtype')) T.type = [['Title','44 / 800 Barlow Cond.','font:800 28px \'Barlow Condensed\',sans-serif;text-transform:uppercase'],['Number','64 / 800 Barlow Cond.','font:800 28px \'Barlow Condensed\',sans-serif'], T.type[2]];
+    const el = document.createElement('div');
+    el.className = 'tokens';
+    el.innerHTML = `<h3>Color</h3>
+      <div class="swatches">${T.sw.map(([n, c]) => `<div class="sw"><i style="background:${c}"></i><b>${n}</b><span>${c.slice(0, 7)}</span></div>`).join('')}</div>
+      <h3>Type</h3>
+      <div class="typespec">${T.type.map(([n, spec, css]) => `<div><small>${n}</small><span style="${css}">${n === 'Number' ? '80.9' : n === 'Title' ? 'Push A' : 'Six exercises'}</span></div><div><small></small><span style="font-size:12px;color:var(--board-ink-2)">${spec}</span></div>`).join('')}</div>
+      <h3>Shape &amp; spacing</h3>
+      <div>${T.shape}</div>`;
+    return el;
+  }
+
+  document.querySelectorAll('.option').forEach((o) => mount(o, o.dataset.theme));
+})();
+</script>
+</body>
+</html>
